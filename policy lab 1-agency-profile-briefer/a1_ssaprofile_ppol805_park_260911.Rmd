@@ -1,0 +1,444 @@
+---
+title: |
+  \large \textbf{Agency Profile Briefer: Social Security Administration (SSA)} 
+subtitle: |
+ PPOL805: Bureaucracy - Policy Lab 1 \vspace{0.2cm}
+author: "Jody Park"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+    latex_engine: xelatex
+colorlinks: true
+urlcolor: black
+linkcolor: blue
+fontsize: 11pt
+bibliography: "references.bib"
+csl: "apanodoi.csl"
+link-citations: true
+reference-section-title: References
+header-includes:
+  - \usepackage[capposition=top]{floatrow}
+  - \usepackage{placeins}   
+  - \usepackage{dcolumn}
+  - \usepackage{booktabs}
+  - \usepackage{siunitx}
+  - \usepackage{amsmath}
+  - \usepackage{enumerate}
+  - \usepackage[shortlabels]{enumitem}
+  - \usepackage[hang,flushmargin]{footmisc}	
+  - \usepackage{makecell}
+  - \usepackage{url}
+  - \usepackage{longtable}
+  - \usepackage{graphicx}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{xcolor}
+  - \usepackage[most]{tcolorbox}
+  - \newtcolorbox{qbox}{enhanced,breakable,boxrule=0.5pt,arc=2mm,
+    colback=gray!10,colframe=black!50,left=6pt,right=6pt,top=6pt,bottom=6pt}
+  - \usepackage{fontspec}
+  - \usepackage[margin=1in]{geometry}
+  - \usepackage{titling}
+  - \setlength{\droptitle}{-1in}
+  - \usepackage{setspace}
+  - \setstretch{1.0} 
+---
+
+```{r setup, include=FALSE}
+# R libraries
+library(tidyverse)
+library(kableExtra)
+
+# For figures and tables
+knitr::opts_chunk$set(
+                      fig.width = 9, fig.height = 7, fig.retina = 3,
+                      out.width = "100%",
+                      cache = FALSE,
+                      echo = FALSE,
+                      message = FALSE,
+                      warning = FALSE
+                      )
+```
+
+# Agency Profile Briefer: Social Security Administration (SSA)
+
+## 1. Social Security Administration (SSA)
+
+The Social Security Administration (SSA) administers federal income protection across retirement, disability, and the death of a covered worker. Its responsibilities include Old-Age, Survivors, and Disability Insurance (OASDI) under Title II of the Social Security Act and Supplemental Security Income (SSI) under Title XVI. Social Security Disability Insurance (SSDI) is the disability component of OASDI. SSI provides means-tested support to eligible older adults and people who are blind or have disabilities [@ssa2026p]. SSA also issues Social Security numbers and handles Medicare enrollment [@ssa2026a; @socialsecurity2024].
+
+SSA combines national program rules with a geographically dispersed service network. Its field offices check non-medical eligibility and help people navigate claims. State Disability Determination Services (DDS) agencies develop medical evidence and make most initial disability determinations under federal standards [@ssa2026c]. This arrangement raises a question of bureaucratic design: how can elected officials hold SSA accountable while preserving the expertise needed to administer benefits consistently?
+
+This brief profiles the institutional setting for my semester project on SSA officials' information sharing with Congress. The central argument is that SSA's statutory independence coexists with political oversight and intergovernmental implementation. These features establish who controls administrative decisions and who holds information about their consequences. They motivate a study of which officials reach congressional hearings and what information they provide there.
+
+
+## 2. Statutory Mission and Authority
+
+Section 701 of the Social Security Act ([42 U.S.C. § 901](https://www.ssa.gov/OP_Home/ssact/title07/0701.htm)) establishes SSA as an independent agency within the executive branch and assigns its core programs. Section 702 ([42 U.S.C. § 902](https://www.ssa.gov/OP_Home/ssact/title07/0702.htm)) places agency authority in a single Commissioner. The President appoints the Commissioner with Senate confirmation. The Commissioner can issue regulations and delegate duties to agency personnel. The same section permits organizational changes except where Congress has fixed a unit or provision in statute [@socialsecurity2024].
+
+Congress specifies benefit eligibility and authorizes SSA to administer those rules. Section 205 ([42 U.S.C. § 405](https://www.ssa.gov/OP_Home/ssact/title02/0205.htm)) provides authority for evidence gathering and benefit adjudication. It also establishes hearings and judicial review for Title II claims. Section 1631(c) ([42 U.S.C. § 1383(c)](https://www.ssa.gov/OP_Home/ssact/title16b/1631.htm)) provides hearing and review procedures for SSI. These provisions give claimants routes to challenge adverse decisions while constraining how SSA exercises its delegated authority [@socialsecurity2024].
+
+Section 221 ([42 U.S.C. § 421](https://www.govinfo.gov/content/pkg/USCODE-2024-title42/pdf/USCODE-2024-title42-chap7-subchapII-sec421.pdf)) assigns disability determinations to participating state agencies under federal rules and provides federal funding for that work. Section 1633(a) ([42 U.S.C. § 1383b(a)](https://www.ssa.gov/OP_Home/ssact/title16b/1633.htm)) extends the relevant determination provisions to SSI. SSA sets DDS performance requirements while states manage daily operations [@socialsecurity2024; @ssa2025a]. The resulting division separates national standards from some of the personnel and workflow decisions that implement them.
+
+This structure illustrates @huber2002's account of statutes as instruments for shaping bureaucratic autonomy. Legal authority establishes the permissible scope of action. Administrative discretion concerns choices within that scope. Neither concept measures an agency's ideological position. For SSA, the research task is to trace how information about implementation reaches officials who can revise statutes or administrative resources.
+
+
+## 3. Organizationl Structure \& Degree of Independence
+
+SSA sits outside a cabinet department and operates under a Commissioner rather than a multimember commission. The 2018 Sourcebook provides a historical record of this structure [@sourcebook]. SSA's currently posted organization chart separates Field Operations, Processing Centers, Digital Services, and Disability Adjudication. It also identifies actuarial, legal, financial, and other support functions. Appendix B groups these functions to show their relationship to external authority; it is not an exhaustive personnel chart [@ssa2025b].
+
+Structural independence has several dimensions. @selin2015 distinguishes constraints on the appointment of decision makers from constraints on political review of agency policy. This distinction matters because an agency can have institutional protections while remaining responsive to elected officials. SSA's Commissioner has a statutory six-year term under 42 U.S.C. § 902(a)(3) [@socialsecurity2024]. However, the Department of Justice's Office of Legal Counsel concluded in 2021 that the Commissioner's removal restriction is unconstitutional and that the President may remove the Commissioner at will. The statutory term therefore cannot be treated as evidence of effective protection from presidential removal [@justice2021].
+
+Other provisions give SSA a distinct institutional position. Section 704 ([42 U.S.C. § 904](https://www.ssa.gov/OP_Home/ssact/title07/0704.htm)) requires the President to transmit the Commissioner's budget to Congress without revision alongside the President's own agency budget. It also limits specified noncareer and policy positions to the equivalent of 20 full-time positions, excluding positions established under Section 702. These provisions preserve channels for agency information and constrain some appointments. They do not give SSA control over congressional funding [@socialsecurity2024].
+
+Accountability also operates through administrative appeals and judicial review. The Social Security Advisory Board advises on program administration. The SSA Office of the Inspector General (OIG) conducts independent audits and investigations [@inspector2026]. Government Accountability Office (GAO) reports supply additional oversight evidence [@gao2026]. Their roles differ from the Commissioner's management authority and the courts' authority to review decisions [@socialsecurity2024; @ssa2026k; @gao2026]. Together, these institutions create several audiences for SSA's expertise. Their existence does not establish that each audience receives the same information.
+
+
+## 4. Motivations \& Objectives for SSA Studies
+
+On March 25, 2026, SSA Chief Actuary Karen Glenn presented evidence on Social Security's finances to the Senate Budget Committee. Her statement explained the assumptions behind projections and options for maintaining solvency [@glenn2026]. The hearing illustrates a direct channel from agency expertise to congressional deliberation. Whether legislators use that evidence to change policy remains a separate question. For beneficiaries, the stakes concern both the benefits Congress authorizes and SSA's capacity to deliver them.
+
+Recent administrative changes make that distinction useful. In January 2026, GAO identified risks to SSA's supply of mission-critical skills and recommended updating its human capital plan [@gao2026]. In March, SSA announced that federal Disability Case Review would take over medical continuing disability reviews from state DDS agencies. The agency presented this shift as a way to free DDS capacity for initial claims and reconsiderations [@ssa2026l]. That announcement establishes an intended reassignment of work. It does not establish its effects on processing time or accuracy. 
+
+These developments make SSA a timely case for studying how political oversight responds to administrative change. The March hearing addressed the program's financial future while SSA faced staffing risks and announced plans to reallocate disability-review work. Evaluating those choices requires information about the agency's capacity to carry them out. For applicants and beneficiaries, that capacity matters for timely decisions and reliable access to benefits. Yet access to agency expertise does not ensure that legislators receive the same information. Ban et al. find that partisan alignment conditions the analytical information exchanged in hearings [@ban2026]. Studying SSA now can show whether congressional deliberation draws on the operational knowledge needed to assess these changes. This connects the agency's institutional design to the practical demands of oversight without assuming that hearing access produces policy influence.
+
+My primary research question is: How do SSA's institutional structure and its ideological alignment with congressional overseers shape SSA officials' access to congressional agenda-setting venues and the analytical information they provide there? @ban2026 show how partisan alignment conditions information exchange in hearings. @liu2025 distinguish participation from dispersion across committees and network centrality. I will use these approaches to separate congressional agenda access from the content of testimony.
+
+The project treats formal authority and independence as institutional context where they vary little within SSA. Documented reorganizations will be dated separately. The analysis will emphasize variation across Congresses, committees, administrations, issues, and witness roles. Career officials and political appointees may face different incentives when answering legislators. Acs's agency ideal-point estimates include SSA and offer a possible measure of alignment [@acs2025, Figure 1]. Their use requires matching the available estimates to the study period. They cannot be assumed to measure individual witnesses' preferences.
+
+The next step is to assemble hearing records and code witness roles alongside analytical information. Measures of participation and network position will describe access to the relevant policy domain. Administrative records can then establish the timing of implementation changes. Hearing appearances alone cannot demonstrate policy influence. The contribution is a focused SSA case that connects institutional design to observable information exchange while leaving causal claims about implementation for a design that can support them.
+
+
+\newpage
+
+# Appendices
+
+## Appendix A: Annotated Bibliography
+
+These selected readings establish the project's theoretical framework and measurement strategy. The legal sources define SSA's authority. The oversight report identifies current implementation concerns.
+
+1. Huber, J. D., & Shipan, C. R. (2002). *Deliberate discretion? The institutional foundations of bureaucratic autonomy*. Cambridge University Press.
+
+The authors ask why legislatures differ in how tightly they specify policy in law. They argue that political conflict and institutional capacity shape the use of statutory detail to control bureaucrats. Their comparative analysis combines theoretical expectations with evidence from parliamentary democracies and U.S. states. The study explains how legal design responds to the political environment rather than treating delegation as a uniform transfer of authority. For my project, its contribution is a distinction between statutory constraints and choices left to administrators. SSA's authority to administer benefits establishes the institutional setting for information sharing. It does not reveal whether particular officials agree with congressional overseers or how they respond to questions in hearings [@huber2002].
+
+2. Selin, J. L. (2015). What makes an agency independent? *American Journal of Political Science, 59*(4), 971–987.
+
+The research question is how structural features insulate agencies from elected officials. The author argues that broad labels such as independent agency conceal differences in political control. She uses a Bayesian latent variable model with 50 structural features of 321 federal agencies. The estimates distinguish limits on appointments from limits on political review of policy. The main takeaway is that independence requires examining specific institutional arrangements. This framework helps me interpret SSA's leadership and budget provisions without treating its location outside a department as complete autonomy. For a historical SSA study, I also need to account for changes in the legal operation of those provisions. The article's original estimates cannot establish the agency's current degree of independence [@selin2015].
+
+3. Ban, P., Park, J. Y., & You, H. Y. (2026). Bureaucrats in Congress: The politics of interbranch information sharing. *The Journal of Politics, 88*(2), 787–804.
+
+The paper asks how partisan alignment affects information transmitted between bureaucrats and legislators. The authors examine bureaucratic witnesses in committee hearings and measure the analytical content of testimony. They find less analytical information in exchanges with legislators outside the President's party. This pattern is stronger for political appointees. At the hearing level, information from other witnesses can offset lower bureaucratic information under divided government. The study gives my project a way to distinguish access from the substance of an exchange. Its emphasis on witness status also motivates separating career officials from appointees within SSA. The SSA case can assess whether these patterns appear in a specific benefits agency. Observing similar patterns would not by itself identify their effects on implementation [@ban2026].
+
+4. Liu, X., Hannibal, B., & Vedlitz, A. (2025). Bureaucratic access in national policy agenda setting process: Participation, dispersion, and centrality. *Policy Studies Journal, 53*(4), 833–851.
+
+The authors ask how to measure bureaucratic access to congressional agenda setting. They argue that witness frequency captures only part of that access. Their data cover congressional hearings and testimony on global warming and climate change from 1976 to 2007. They assess participation alongside dispersion and network centrality. Bureaucrats were especially prominent across these measures when the issue was new and fluid. The main takeaway for my project is that access depends on how widely and centrally officials participate within a policy domain. I will adapt these measures to SSA-related hearings after defining the domain and its witness population. High centrality may indicate an advantageous position for exchanging information. It does not show that legislators accepted a witness's recommendations [@liu2025].
+
+5. Acs, A. (2025). Mapping the political contours of the regulatory state: Dynamic estimates of agency ideal points. *American Political Science Review*, 1–18. Advance online publication.
+
+The author asks how agency ideology changes across presidential administrations. The study estimates ideal points using planned regulations and presidential regulatory review. An item response model links agency estimates to presidential and legislative ideal points. The estimates describe ideological change and associate proximity to the President with regulatory productivity. This approach offers a potential way to measure SSA's ideological alignment over time. SSA appears in the paper's agency estimates (Figure 1). Before applying them, I need to check temporal coverage and comparability for the proposed hearing sample. The main limitation for my project is the level of measurement. An agency estimate cannot identify a career official's personal ideology or substitute for the analytical content of testimony [@acs2025].
+
+6. Social Security Act, 42 U.S.C. §§ 405, 421, 901–904, 1383–1383b.
+
+These statutory provisions establish the agency's mission and allocate authority over administration and review. They provide the legal basis for Commissioner leadership and federal-state disability determinations. They also define routes through which claimants can challenge decisions. As primary legal sources, they establish formal powers rather than empirical findings about their use. I use them to identify which actors can change policy and which actors implement or review decisions. The main takeaway is that the disability process divides responsibilities across institutions while maintaining federal program standards. I will read the text alongside current legal interpretations and administrative guidance. In particular, the Commissioner's statutory removal language requires the qualification discussed in the 2021 Office of Legal Counsel opinion [@socialsecurity2024; @justice2021].
+
+7. U.S. Government Accountability Office. (2026). *Federal telework: Social Security Administration needs a plan to maintain a workforce with the skills needed to provide timely service* (GAO-26-107645).
+
+The report examines telework and service delivery at three agencies, including SSA. GAO combines administrative records with document review and interviews. It identifies risks to SSA's ability to retain necessary skills and recommends updating its human capital plan. It also recommends evaluating the remaining telework program. The report does not isolate telework as the cause of service delays. Its main contribution to my project is current evidence about the administrative capacity issues that oversight actors can bring to congressional attention. I can use its findings to identify hearing topics and compare agency statements with external assessments. The report's recommendations should remain distinct from evidence that SSA implemented them or improved service [@gao2026].
+
+\newpage
+
+
+## Appendix B: Organization \& Authority Diagram
+
+Figure \@ref(fig:ssa-authority) separates SSA's internal administration from external oversight. The internal groupings follow SSA's posted organization chart; grouped boxes summarize functions rather than reproduce every reporting line. The President appoints the Commissioner with Senate confirmation. Congress controls statutory authority and administrative funding. Federal courts review final decisions under applicable law. OIG provides internal independent oversight, GAO supports congressional oversight, and the Social Security Advisory Board provides advice [@ssa2025b; @socialsecurity2024].
+
+```{r ssa-authority, echo=FALSE, fig.cap="SSA organization and external authority", fig.pos="H", fig.align="center", fig.width=9, fig.height=7.2}
+# draw fixed boxes
+# line endpoints stop at box boundaries
+brief_map <- function(nodes, edges, labels, xlim, ylim) {
+  ggplot() +
+    geom_segment(data = edges,
+                 aes(x = x, y = y, xend = xend, yend = yend,
+                     color = relation, linetype = relation),
+                 linewidth = 0.55,
+                 arrow = grid::arrow(type = "closed",
+                                     length = grid::unit(0.08, "in"))) +
+    geom_rect(data = nodes,
+              aes(xmin = x - w, xmax = x + w,
+                  ymin = y - h, ymax = y + h, fill = sector),
+              color = "#333333", linewidth = 0.4) +
+    geom_text(data = nodes, aes(x = x, y = y, label = label),
+              size = 3.2, lineheight = 1.05) +
+    geom_label(data = labels, aes(x = x, y = y, label = label),
+               size = 2.8, linewidth = 0, fill = "white") +
+    scale_fill_manual(values = c("SSA" = "#D9EAF3", "State" = "#FBE7C5",
+                                 "Public" = "#E2F0E7", "Oversight" = "#EEEEEE")) +
+    scale_color_manual(values = c("Authority / review" = "#0072B2",
+                                  "Case flow" = "#009E73",
+                                  "Evidence / advice" = "#D55E00")) +
+    scale_linetype_manual(values = c("Authority / review" = "solid",
+                                     "Case flow" = "solid",
+                                     "Evidence / advice" = "dashed")) +
+    coord_cartesian(xlim = xlim, ylim = ylim, clip = "off") +
+    labs(fill = NULL, color = NULL, linetype = NULL) +
+    theme_void(base_size = 11) +
+    theme(legend.position = "bottom", legend.box = "vertical",
+          plot.margin = margin(8, 8, 8, 8))
+}
+
+brief_org_nodes <- tibble::tribble(
+  ~x, ~y, ~w, ~h, ~label, ~sector,
+  1.5, 8.5, 1.25, 0.48, "Congress", "Oversight",
+  5, 8.5, 1.25, 0.48, "President / OMB", "Oversight",
+  8.5, 8.5, 1.25, 0.48, "Federal courts", "Oversight",
+  5, 6.4, 1.35, 0.5, "SSA Commissioner\nDeputy Commissioner", "SSA",
+  1.5, 4.2, 1.3, 0.7, "Field Operations\nProcessing Centers\nDigital Services", "SSA",
+  5, 4.2, 1.3, 0.7, "Disability Adjudication\nHearings and\nadministrative review", "SSA",
+  8.5, 4.2, 1.3, 0.7, "Actuary; law and policy\nFinance; IT; personnel\nOther support functions", "SSA",
+  1.5, 1.7, 1.3, 0.55, "State DDS agencies\nFederal standards\nand funding", "State",
+  5, 1.7, 1.3, 0.55, "SSA OIG\nAudits / investigations", "Oversight",
+  8.5, 1.7, 1.3, 0.55, "GAO / Advisory Board\nExternal evaluation\nand advice", "Oversight"
+)
+brief_org_edges <- tibble::tribble(
+  ~x, ~y, ~xend, ~yend, ~relation,
+  1.5, 8.02, 3.8, 6.9, "Authority / review",
+  5, 8.02, 5, 6.9, "Authority / review",
+  8.5, 8.02, 6.2, 6.9, "Authority / review",
+  3.8, 5.9, 1.5, 4.9, "Authority / review",
+  5, 5.9, 5, 4.9, "Authority / review",
+  6.2, 5.9, 8.5, 4.9, "Authority / review",
+  1.5, 3.5, 1.5, 2.25, "Authority / review",
+  5, 2.25, 5, 3.5, "Evidence / advice",
+  8.5, 2.25, 8.5, 3.5, "Evidence / advice"
+)
+brief_org_labels <- tibble::tribble(
+  ~x, ~y, ~label,
+  2.0, 7.4, "Statutes; funding\nSenate confirmation",
+  5, 7.45, "Appointment\nExecutive priorities",
+  8, 7.4, "Judicial review",
+  1.5, 2.9, "SSA funding / standards"
+)
+brief_map(brief_org_nodes, brief_org_edges, brief_org_labels,
+          c(0, 10), c(0.8, 9.1))
+```
+
+*Note:* Oversight arrows into grouped SSA boxes indicate agency-wide review or advice, not supervisory reporting lines. The DDS link denotes federal program administration; DDS agencies remain state organizations. Sources: SSA organization chart and Social Security Act §§ 205 and 701–704 [@ssa2025b; @socialsecurity2024].
+
+\newpage
+
+
+## Appendix C: Policy Field Audit
+
+**Policy Field Audit Worksheet**
+
+I define the policy field as disability determination for SSDI and SSI, from application through administrative and judicial review. Stakeholder analysis identifies actors' interests and influence. Policy-field analysis adds the relationships through which they implement policy. Table \@ref(tab:ssa-audit-worksheet) condenses the worksheet's preparation questions and Steps 1, 3, and 4. Table \@ref(tab:ssa-stakeholders) answers Step 2 on interests, power, and administrative authority.
+
+```{r ssa-audit-worksheet, results='asis'}
+# summarize worksheet answers; actor-specific interests appear in the next table
+brief_audit <- tibble::tribble(
+  ~"Worksheet element", ~"SSA application",
+  "Preparation: what is needed?", "Statutes, regulations, POMS and hearing guidance; current organization and budget documents; Sourcebook as historical context; oversight reports. Assemble staffing, caseload, processing-time, accuracy, and claimant data where comparable across jurisdictions.",
+  "Preparation: who is needed?", "SSA service, disability-policy, quality-review, and appeals staff; DDS administrators, examiners, and medical or psychological consultants; claimants, representatives, and medical providers. Oversight actors supply additional evidence. These are proposed sources for validation, not completed interviews.",
+  "Preparation: time", "Allow about one hour for an initial audit. Source checks and comparisons across selected states require additional time. This is a planning estimate, not a record of work completed.",
+  "Step 1: program and boundary", "SSDI and SSI disability determinations link federal administration, state DDS agencies, and non-governmental evidence providers. State and local health, rehabilitation, and human-service institutions form an adjacent service network. Their specific links must be checked for each jurisdiction.",
+  "Step 3: federal legal framework", "Social Security Act Titles II and XVI establish the programs. Sections 205 and 1631 provide hearing and judicial-review procedures; Sections 221 and 1633 authorize disability-determination arrangements. Sections 701-704 establish agency leadership and administrative powers. 20 C.F.R. Parts 404 and 416 supply implementing rules.",
+  "Step 3: state administration and funding", "SSA funds necessary DDS costs within approved budgets. States apply personnel standards consistent with federal requirements and set rates for purchased services within federal limits. Identify applicable state personnel and procurement provisions when selecting comparison states; the disability standard remains federal.",
+  "Step 3: policy tools", "Cash benefits; federal-state delegation and administrative funding; regulations and operating guidance; DDS performance monitoring; purchased medical evidence; quality review and corrective action; administrative appeals and judicial review. Congressional oversight and appropriations provide additional control.",
+  "Step 3: implementation resources", "Claims specialists, disability examiners, medical and psychological consultants, ALJs, and review staff; medical records and work histories; electronic case files and secure records exchange; staff training and claimant assistance. Evaluate capacity using staffing, pending cases, processing time, and accuracy together.",
+  "Step 4: field categories", "Legal authority and review; funding and management; service delivery; oversight and learning. Actors may occupy several categories. The diagrams use institution type for node colors and relationship type for arrows, rather than assigning one role to each actor."
+)
+knitr::kable(brief_audit, format = "latex", booktabs = TRUE,
+             longtable = TRUE, escape = TRUE,
+             caption = "Policy field audit worksheet: summary of answers") %>%
+  kable_styling(latex_options = "repeat_header", font_size = 9) %>%
+  column_spec(1, width = "1.4in") %>%
+  column_spec(2, width = "4.7in")
+```
+
+\begingroup\footnotesize
+*Sources:* Social Security Act §§ 205, 221, 701–704, 1631, and 1633; DDS performance policy; federal personnel, purchased-service, and fiscal regulations [@socialsecurity2024; @ssa2025a; @personnel2025; @medical2025; @fiscal2025]. SSA's quality-review guidance provides for review of selected determinations before effectuation and correction of deficient cases [@ssa2022].
+\par\endgroup
+
+The central delegation issue is the division between SSA's funding and standards and state responsibility for daily DDS management [@ssa2025a]. GAO's workforce assessment identifies risks to SSA's supply of necessary skills; it does not isolate one cause of processing delays [@gao2026]. Continuing disability reviews form a related workload. In March 2026, SSA announced a transfer of medical reviews from DDS agencies to federal Disability Case Review. The announcement describes an intended reassignment, not verified completion or measured service effects [@ssa2026l].
+
+The stakeholder table distinguishes expected interests from formal authority. These interests are analytical expectations based on institutional roles; members of a group may disagree. It includes SSA's broader constituencies alongside the disability field's participants.
+
+```{r ssa-stakeholders, results='asis'}
+# separate interests from formal authority and channels of influence
+brief_stakeholders <- tibble::tribble(
+  ~Actor, ~"Interests / stakes", ~"Authority / influence",
+  "Applicants, beneficiaries, families", "Accurate decisions; timely income; accessible service; privacy", "Supply evidence; appeal; contact elected officials. Includes retired workers, survivors, and SSI recipients beyond this disability field.",
+  "Workers and employers", "Reliable coverage records; sustainable financing; predictable obligations", "Provide earnings information; organize and advocate over program design.",
+  "Representatives and disability advocates", "Fair procedures; access to records; claimant protection", "Assist claims; develop appeals; litigate; communicate administrative problems.",
+  "SSA leadership and service staff", "Lawful decisions; workable caseloads; program integrity", "Issue rules and guidance; allocate resources; process claims and payments within delegated authority.",
+  "State DDS agencies", "Adequate funding; trained examiners; manageable workloads", "Develop medical evidence and determine disability under SSA standards; manage daily state operations.",
+  "Medical providers and examiners", "Clear requests; accurate records; payment for purchased examinations", "Supply medical evidence and consultative examinations; do not award benefits.",
+  "State and local service partners", "Continuity of health and social services; assistance for applicants", "Medicaid, vocational-rehabilitation, and human-service agencies may coordinate services. Local clinics, hospitals, and community organizations may provide records or application help; roles require local verification.",
+  "Congress", "Constituent service; program financing; oversight", "Legislate and appropriate; hold hearings. Ways and Means and Senate Finance oversee programs; appropriations committees fund administration.",
+  "President and OMB", "Executive priorities; budget and management objectives", "Presidential appointment with Senate confirmation; executive budget and management direction within law.",
+  "ALJs and Appeals Council", "Legally sound review and fair procedures", "Conduct hearings and administrative review; can correct or remand decisions under applicable procedures.",
+  "Federal courts", "Lawful agency decisions and procedures", "Review final agency decisions in cases within their jurisdiction; may affirm, reverse, or remand.",
+  "GAO; SSA OIG; Advisory Board", "Accountability; program integrity; effective administration", "GAO evaluates for Congress; OIG audits and investigates; the Board advises. These roles do not confer routine benefit-award authority."
+)
+knitr::kable(brief_stakeholders, format = "latex", booktabs = TRUE,
+             longtable = TRUE, escape = TRUE,
+             caption = "SSA stakeholders: interests and sources of influence") %>%
+  kable_styling(latex_options = "repeat_header", font_size = 9) %>%
+  column_spec(1, width = "1.25in") %>%
+  column_spec(2, width = "1.75in") %>%
+  column_spec(3, width = "2.95in")
+```
+
+\begingroup\footnotesize
+*Sources:* Statutory provisions cited above; SSA disability and appeals guidance; DDS performance policy; GAO [@ssa2026c; @ssa2026k; @ssa2025a; @gao2026]. State and local partners require jurisdiction-specific validation.
+\par\endgroup
+
+\newpage
+
+**Policy Field Visual Diagram**
+
+The visual worksheet uses the audit's actor list and a directed list of relationships. I would allow about one hour for a first diagram, followed by source checks. SSA and DDS personnel could validate formal procedures; claimants and representatives could identify missing relationships and burdens. This is a proposed validation step.
+
+Figure \@ref(fig:ssa-policy-network) groups actors across oversight, federal administration, operations, and the public-facing level. Node colors identify institution type. Arrow colors distinguish funding and authority, legal review, service or case flow, and evidence or advice. Dashed lines also distinguish advice and review. Borders are uniform because formal powers are described in the stakeholder table rather than scored on a single authority scale. Figure \@ref(fig:ssa-field) separately shows the claim and appeal sequence. Neither diagram depicts the announced continuing-review transition.
+
+```{r ssa-policy-network, echo=FALSE, fig.cap="SSA disability policy field: institutional relationships", fig.pos="H", fig.align="center", fig.width=9, fig.height=6.2}
+# map institutional relationships separately from the claim sequence
+brief_policy_nodes <- tibble::tribble(
+  ~node, ~label, ~x, ~y, ~sector,
+  "congress", "Congress", 0, 9, "Federal oversight",
+  "president", "President\nand OMB", 4, 9, "Federal oversight",
+  "courts", "Federal\ncourts", 8, 9, "Federal oversight",
+  "watchdogs", "GAO / SSA OIG\nAdvisory Board", 0, 6, "Oversight / advice",
+  "ssa", "SSA Commissioner\nand central offices", 4, 6, "SSA component",
+  "appeals", "ALJ hearings\nand Appeals Council", 8, 6, "SSA component",
+  "field", "SSA field\noffices", 0, 3, "SSA component",
+  "dds", "State DDS\nagencies", 4, 3, "State partner",
+  "medical", "Medical providers\nand CE vendors", 8, 3, "Non-governmental",
+  "claimants", "Claimants, families,\nand representatives", 4, 0, "Non-governmental"
+)
+brief_policy_edges <- tibble::tribble(
+  ~from, ~to, ~relation,
+  "congress", "ssa", "Funding / authority",
+  "president", "ssa", "Funding / authority",
+  "courts", "appeals", "Legal review",
+  "watchdogs", "congress", "Evidence / advice",
+  "watchdogs", "ssa", "Evidence / advice",
+  "ssa", "field", "Funding / authority",
+  "ssa", "dds", "Funding / authority",
+  "ssa", "appeals", "Funding / authority",
+  "field", "dds", "Service / case flow",
+  "dds", "field", "Service / case flow",
+  "dds", "medical", "Funding / authority",
+  "medical", "dds", "Evidence / advice",
+  "claimants", "field", "Service / case flow",
+  "claimants", "appeals", "Service / case flow",
+  "claimants", "congress", "Evidence / advice"
+) %>%
+  left_join(brief_policy_nodes %>% select(from = node, x, y), by = "from") %>%
+  left_join(brief_policy_nodes %>% select(to = node, x_to = x, y_to = y),
+            by = "to") %>%
+  mutate(
+    # stop arrows at the fixed box boundaries
+    dx = x_to - x, dy = y_to - y,
+    offset = 1 / pmax(abs(dx) / 1.35, abs(dy) / 0.55),
+    xend = x_to - dx * offset, yend = y_to - dy * offset,
+    x = x + dx * offset, y = y + dy * offset
+  )
+
+ggplot() +
+  geom_curve(data = brief_policy_edges,
+             aes(x = x, y = y, xend = xend, yend = yend,
+                 color = relation, linetype = relation),
+             curvature = 0.08, linewidth = 0.6, alpha = 0.85,
+             arrow = grid::arrow(type = "closed",
+                                 length = grid::unit(0.09, "in"))) +
+  geom_rect(data = brief_policy_nodes,
+            aes(xmin = x - 1.35, xmax = x + 1.35,
+                ymin = y - 0.55, ymax = y + 0.55, fill = sector),
+            color = "#333333", linewidth = 0.45) +
+  geom_text(data = brief_policy_nodes, aes(x = x, y = y, label = label),
+            size = 3.1, lineheight = 1.05) +
+  scale_color_manual(values = c("Funding / authority" = "#D55E00",
+                                "Legal review" = "#0072B2",
+                                "Service / case flow" = "#009E73",
+                                "Evidence / advice" = "#CC79A7")) +
+  scale_linetype_manual(values = c("Funding / authority" = "solid",
+                                   "Legal review" = "longdash",
+                                   "Service / case flow" = "solid",
+                                   "Evidence / advice" = "dashed")) +
+  scale_fill_manual(values = c("Federal oversight" = "#EEEEEE",
+                               "Oversight / advice" = "#EEEEEE",
+                               "SSA component" = "#D9EAF3",
+                               "State partner" = "#FBE7C5",
+                               "Non-governmental" = "#E2F0E7")) +
+  coord_cartesian(xlim = c(-1.6, 9.6), ylim = c(-0.8, 9.8), clip = "off") +
+  labs(color = "Relationship", linetype = "Relationship", fill = "Institution") +
+  guides(color = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2),
+         fill = guide_legend(nrow = 2)) +
+  theme_void(base_size = 11) +
+  theme(legend.position = "bottom", legend.box = "vertical",
+        plot.margin = margin(10, 10, 10, 10))
+```
+
+\begingroup\footnotesize
+*Note:* Congress appropriates funds; the President and OMB shape executive priorities and budget proposals. The shared GAO/OIG/Advisory Board box groups evidence and advice channels, not identical powers. Court arrows indicate review authority. The claimant-to-appeals arrow summarizes requests under applicable procedures; the sequence appears below. Sources: Social Security Act and SSA guidance [@socialsecurity2024; @ssa2026c; @ssa2026k; @ssa2025a; @gao2026].
+\par\endgroup
+
+\newpage
+
+Figure \@ref(fig:ssa-field) traces initial determination and the possible route through reconsideration, an administrative law judge (ALJ) hearing, and Appeals Council review to federal litigation. Each stage requires the applicable request or filing [@ssa2026k].
+
+```{r ssa-field, echo=FALSE, fig.cap="SSA disability claim and appeal sequence", fig.pos="H", fig.align="center", fig.width=9, fig.height=6.5}
+brief_field_nodes <- tibble::tribble(
+  ~x, ~y, ~w, ~h, ~label, ~sector,
+  1.5, 7.5, 1.25, 0.55, "Claimant\nand representative", "Public",
+  5, 7.5, 1.25, 0.55, "SSA field office\nNon-medical eligibility", "SSA",
+  8.5, 7.5, 1.25, 0.55, "State DDS\nMedical determination", "State",
+  8.5, 5.2, 1.25, 0.55, "Medical sources\nConsultative examiners", "Public",
+  5, 3.1, 1.25, 0.55, "ALJ hearing", "SSA",
+  8.5, 3.1, 1.25, 0.55, "DDS reconsideration", "State",
+  1.5, 3.1, 1.25, 0.55, "Appeals Council", "SSA",
+  1.5, 1.1, 1.25, 0.45, "Federal district court", "Oversight"
+)
+brief_field_edges <- tibble::tribble(
+  ~x, ~y, ~xend, ~yend, ~relation,
+  2.75, 7.5, 3.75, 7.5, "Case flow",
+  6.25, 7.5, 7.25, 7.5, "Case flow",
+  8.5, 5.75, 8.5, 6.95, "Evidence / advice",
+  9.75, 7.5, 10.2, 7.5, "Case flow",
+  10.2, 7.5, 10.2, 3.1, "Case flow",
+  10.2, 3.1, 9.75, 3.1, "Case flow",
+  7.25, 3.1, 6.25, 3.1, "Case flow",
+  3.75, 3.1, 2.75, 3.1, "Case flow",
+  1.5, 2.55, 1.5, 1.55, "Case flow"
+)
+brief_field_labels <- tibble::tribble(
+  ~x, ~y, ~label,
+  3.25, 8.2, "Application",
+  6.75, 8.2, "Referral",
+  7.2, 6.35, "Medical evidence",
+  4.3, 5.3, "Appeal route shown for adverse decisions.\nEach stage requires the applicable request.\nDDS decisions return to SSA for action\n(return link omitted for clarity).",
+  3.25, 3.85, "Review request",
+  6.75, 3.85, "Hearing request",
+  3.3, 1.95, "Civil action after\nfinal agency decision"
+)
+brief_map(brief_field_nodes, brief_field_edges, brief_field_labels,
+          c(0, 10.5), c(0.4, 8.7))
+```
+
+\begingroup\footnotesize
+*Sources:* SSA disability determination and appeals guidance [@ssa2026c; @ssa2026k]. DDS = Disability Determination Services; CE = consultative examination. Both diagrams simplify institutional routes and omit some return paths. Arrows do not measure relationship strength or frequency. Claimants may provide evidence at later stages under applicable rules; remands can return cases for further action.
+\par\endgroup
+
+The next research step is to compare administrative conditions across selected jurisdictions and identify how witnesses describe them in congressional hearings. Linking those exchanges to later performance requires dated records and an assessment of alternative explanations.
+
+\newpage
+

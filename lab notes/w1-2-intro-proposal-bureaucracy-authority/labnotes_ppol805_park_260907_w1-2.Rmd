@@ -1,0 +1,1087 @@
+---
+title: |
+  \large \textbf{Lab Notebook \& Assignment Proposal - Week 1 \& 2} 
+subtitle: |
+  Bureaucracy and Authority \vspace{0.2cm}
+author: "Jody Park"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+    latex_engine: xelatex
+colorlinks: true
+urlcolor: black
+linkcolor: blue
+fontsize: 11pt
+bibliography: "references.bib"
+csl: "apanodoi.csl"
+link-citations: true
+reference-section-title: References
+header-includes:
+  - \usepackage[capposition=top]{floatrow}
+  - \usepackage{placeins}   
+  - \usepackage{dcolumn}
+  - \usepackage{booktabs}
+  - \usepackage{siunitx}
+  - \usepackage{amsmath}
+  - \usepackage{enumerate}
+  - \usepackage[shortlabels]{enumitem}
+  - \usepackage[hang,flushmargin]{footmisc}	
+  - \usepackage{makecell}
+  - \usepackage{url}
+  - \usepackage{longtable}
+  - \usepackage{graphicx}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{xcolor}
+  - \usepackage[most]{tcolorbox}
+  - \newtcolorbox{qbox}{enhanced,breakable,boxrule=0.5pt,arc=2mm,
+    colback=gray!10,colframe=black!50,left=6pt,right=6pt,top=6pt,bottom=6pt}
+  - \usepackage{fontspec}
+  - \usepackage[margin=1in]{geometry}
+  - \usepackage{titling}
+  - \setlength{\droptitle}{-1in}
+  - \usepackage{setspace}
+  - \setstretch{1.2} 
+---
+
+```{r setup, include = FALSE, message=FALSE, results=FALSE, echo = FALSE}
+# R libraries
+# data manipulation
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(haven)
+library(readr)
+library(caret)
+library(modelr)
+library(broom)
+library(ggplot2)
+library(plotly)
+library(png)
+library(openxlsx) 
+library(kableExtra)
+library(patchwork)
+library(texreg)
+library(estimatr)
+library(MASS) 
+library(Matrix)
+library(sandwich)   # vcovHC
+library(lmtest)     # coeftest
+library(boot)       # bootstrap
+library(conflicted)
+library(car)
+library(cowplot)
+library(AER)
+library(MatchIt)
+library(labelled)
+
+conflict_prefer("filter", "dplyr")
+conflict_prefer("select", "dplyr")
+
+# For figures
+knitr::opts_chunk$set(
+                      fig.width = 9, fig.height = 7, fig.retina = 3,
+                      out.width = "100%",
+                      cache = FALSE,
+                      echo = TRUE,
+                      message = FALSE, 
+                      warning = FALSE,
+                      hiline = TRUE
+                      )
+options(tinytex.verbose = TRUE)
+
+knitr::knit_hooks$set(plot = function (x, options) {
+  float_correct <- function(f, y, opts)  {
+    if (is.null(opts$regfloat) || opts$regfloat==FALSE)
+      paste0(f(y, opts), "\n\n\\FloatBarrier\n")
+    else
+      f(y, opts)
+  }
+  if (!is.null(options$out.width) || !is.null(options$out.height) ||
+      !is.null(options$out.extra) || options$fig.align != "default" ||
+      !is.null(options$fig.subcap)) {
+    if (is.null(options$fig.scap))
+      options$fig.scap = NA
+    return(float_correct(knitr:::hook_plot_tex, x, options))
+  }
+  return(float_correct(knitr:::hook_plot_md_base, x, options))
+})
+
+```
+
+# Goals for this week's lab notebook
+
+- Review the syllabus
+
+- Catch up on readings for week 1 and week 2
+
+- Pick an agency for policy lab assignments
+
+- Write a proposal for individual policy lab assignments (due Tuesday)
+
+\bigskip
+
+## Questions in the first class
+
+### Q1. What does bureaucracy mean to me?
+
+Bureaucracy to me refers to bridges that connect the society and the government, facilitating the implementation of policies and services.
+
+\bigskip
+
+### Q2. What's my hope we don't do in this lab?
+
+My hope is that we don't just focus on the theoretical aspects of bureaucracy, but also explore its practical implications and real-world applications across the states. 
+
+I do hope to develop my research puzzles and my current paper during this class.
+
+
+\newpage
+
+## Agency Choice: Social Security Administration (SSA)
+
+- Agency choice
+    - what they do as a public?
+    - what is it you like
+    - look at the sourcebook
+    - have they been active?
+    - missions public
+    - can see the budget
+    - sth super interesting about them
+        - is there a huge controversy?
+        - big missions
+        - somehow interact with intergovernment footprint? or locality?
+    - who it is.. what is our expectation following the policy lab
+
+
+### What does SSA do for the public?
+
+The Social Security Administration (SSA) is a federal agency that provides crucial services to Americans, including retirement, disability, and survivors benefits. 
+It plays a vital role in the social safety net by ensuring that eligible individuals receive the financial support they need during times of retirement, disability, or loss of a family member.
+
+
+\newpage
+
+## Original Course Assignments
+
+- Pam: look at learning objectives; policy labs; and write what would I do to meet the same targets at the phd level research
+
+Learning objectives:
+
+- To understand how bureaucratic theories explain contemporary public administration challenges 
+- To critically evaluate the role of bureaucratic structures in policy implementation and democratic governance
+- To synthesize theoretical perspectives with current events through AI-assisted analysis
+- To apply ethical frameworks to complex public administration problems
+- To display the ability to apply ethics to a public problem
+- To develop original arguments that build upon AI-generated insights while demonstrating independent critical thinking
+
+\bigskip
+
+### Policy Lab 1. Agency Profile Briefer (10\%) - Due Sep 13
+
+- Choose a federal agency whose structure, authority, or adminstration raises a pressing question of bureaucratic design
+
+- 3-page team brief (single-spaced) that profiles the agency:
+
+  - Statutory mission and Authority
+    - go into authorized statutes (from their website: our authority comes from ...)
+    - authorized statute (at least a sample of some of them)
+  
+  - Organizational Structure
+    - overview of the agency's internal structure, including major divisions and offices
+  
+  - Degree of Independence
+    - the sourcebook has its info
+    - their website
+  
+  - Why Understanding It Matters Now
+
+\bigskip
+
+- Appendices:
+
+    1. An annotated bibliography
+
+        - A list of key sources 
+        - books about federal agencies; journal articles; policy papers
+        - presidential reports to the Congress
+        - Pam is a fan of peer reviews: peer-reviewed journal articles are preferred
+        - elements I'm thinking about to include: research question, gaps/conflicts in the literature, argument, key findings, data, methodology, and conclusions
+            - what I'm using it for, what's in it, and how it contributes to my understanding of the topic (don't have to be long)
+
+    2. An organization/authority diagram (a visual depicition of the agency's structure and its relationship to Congress, the President, and the courts)
+
+        - Sandford and Moulton provide guidance on creating a policy field diagram
+
+    3. A stakeholder analysis identifying the agency's key constituencies and oversight actors
+
+        - stakeholder analysis: look up Sandford and Moulton
+
+\bigskip
+
+- Prepare for a short team lightning talk (5-7 minutes in class on Sep 17)
+
+### Policy Lab 2. Intergovernmental Footprint (15\%) – Due October 18
+
+- Conduct a team-based analysis of how your agency’s programs, rules, grants, or enforcement authority interact with state, local, tribal, or territorial governments (SLTTGs) in a minimum of three states or jurisdictions. 
+
+- Identify:
+
+  - the relevant statutes and intergovernmental mechanisms at play (e.g., grants, delegated authority, cooperative agreements, preemption) 
+
+  - the politics shaping variation across jurisdictions; any relevant federal-state litigation, disputes, or friction points
+
+  - the evidence base for how well the arrangement is working. 
+
+- Diagram the logic of your agency’s intergovernmental relationships and link variation across jurisdictions to that logic. 
+
+- Your written report should be approximately 3,000–4,000 words plus your integrative diagram, submitted via Canvas by 11:59 PM on Sunday, October 18. 
+
+- Present your findings as a short team talk (10–12 minutes) in class on November 5, followed by peer feedback.
+
+\bigskip
+
+### Policy Lab 3. Policy Lab #3: Implementation Practicum (10\%) – In class November 12
+
+- With your project team, apply implementation theory to your agency and one of its key rules or programs: 
+
+    1. Forward map the policy through its implementation using top-down models (problem definition, implementer capacity, consensus and conflict, external factors)
+  
+    2. Backward map from street level to policy design using bottom-up models (targets, administrators, choices and incentives, context and learning)
+
+    3. Analyze the roles of ambiguity, discretion, goal congruence, autonomy, oversight, conflict, power, and resources as they apply to your agency. 
+
+- Each team member leads one segment (about 10 minutes) using words, bullet points, and diagrams. 
+
+- Team materials are submitted at the end of class. Strategic students will use this session as preparation for their mock testimonies.
+
+\bigskip
+
+### Individual Congressional Testimony: Mock Hearing (10\%) – In class November 19
+
+- Individually, investigate how your agency has reported to Congress: identify relevant oversight hearings, committee reports, GAO reports, or agency testimony from recent years. 
+
+- In class, each team member delivers individual mock testimony (approximately 5 minutes) as if appearing before a congressional oversight hearing, while classmates role-play members of Congress and pose followup questions. 
+
+- Submit a short written statement (1–2 pages) summarizing your testimony and citing your sources via Canvas before class. 
+
+- This is an individual assignment; coordinate with your team to avoid duplicating one another’s testimony.
+
+\bigskip
+
+### Final Project: Federal Agency Documentary (25\%)
+
+- The capstone of the course is a team documentary video profiling your project team’s federal agency – the culmination of your labs and notebook work synthesized into a single narrative and visual analysis. Videos should be recorded using accessible tools (smartphone video, Zoom, Canvas Studio, or similar) and uploaded with captions for accessibility. The project has the following components:
+
+  - Draft & Peer Review Workshop (included in participation): upload a rough-cut video (6–10 minutes, roughly 70–80\% complete) by 5:00 PM on December 3; complete structured peer reviews using the provided rubric by December 7.
+  
+  - In-Class Screening (included in participation): screen your near-final cut in class on December 10 for whole-class discussion and feedback.
+  
+  - Documentary Video (15\%): final polished cut (8–12 minutes), in an explainer-documentary style, covering your agency’s statutory structure and authority, budget, oversight and litigation exposure, and a current controversy or case study. Due via Canvas by 5:00 PM on December 17 (finals week).
+  
+  - Written Dossier (10\%): a 5–8 page team document with an annotated bibliography, sourcing notes for claims made in the video, and a brief written synthesis connecting your findings to course concepts (delegation, rulemaking, budgeting, oversight, and intergovernmental relations). Due alongside the video, with an AI collaboration statement.
+
+\newpage
+
+## Policy Lab Assignment Proposal (Last Updated: 9/7/2026)
+
+### Pam's Comment (9/3/2026)
+
+Hi Jody,
+
+I think for each lab you should build to a research proposal/first draft of a new research paper.  These can overlap with your existing papers but should be something new.  Lab 1: background, descriptives, etc. on SSA (written as the beginning of a manuscript or proposal). Lab 2: add to the manuscript with sections on SSA across the country — intergovernmental relationship, office distribution across localities, states, tribes, and territories.  Consider budgets and personnel here too...along with constituents/clients across those areas. ...and so on!
+
+Send me some details for how you see those last assignments panning out.
+
+Best,
+
+Pam
+
+### Proposal Overview
+
+My main goal from this course is to dig into bureaucratic theories and their application to bureaucratic agency ideology and information sharing, particularly in the context of the Social Security Administration (SSA). 
+Across the series of assignments, I plan to develop a new research paper that builds on my research interests in SSA and its bureaucrats' information sharing with Congress through committee hearings [@ban2026; @liu2025]. 
+Specifically, I want to focus on how bureaucratic agency ideology shapes bureaucrats' access to the congressional pre-legislative agenda-setting process and how this access is related to policy implementation and administrative decisions within SSA.
+
+For bureaucratic agency ideology, I will use the following dimensions: types of agency authority, degree of independence, and ideological distance from Congress and the administration (e.g., @acs2025; @selin2015; @soss2006). However, as I continue to learn about bureaucracy in this class, I will also explore other dimensions that may help explain agency ideology and its relationship to bureaucrats' information sharing with Congress.
+
+To keep the project conceptually clear, I will distinguish two related outcomes: **congressional agenda access**, measured through participation, dispersion across committees, and network centrality [@liu2025], and **information provision**, measured by the amount and type of analytical information SSA officials provide in hearings [@ban2026]. 
+
+My primary research question is: *How do SSA's institutional structure and its ideological alignment with congressional overseers shape SSA officials' access to congressional agenda-setting venues and the analytical information they provide there?* 
+
+Because SSA's formal authority and independence vary little within a single-agency study, I will treat them as institutional context rather than time-varying explanatory variables. The empirical analysis will instead emphasize observable variation across Congresses, committees, presidential administrations, issues, and witness roles, especially career officials versus political appointees.
+
+This extends @ban2026 through an in-depth SSA case and applies @liu2025's multidimensional access measures to a distinct policy domain network without treating access as equivalent to policy influence.
+
+I want to focus on:
+
+- Which key bureaucratic theories can explain policy implementation, administrative decisions, agency ideology, and administrative burdens within SSA?
+
+- The role of agency ideology in shaping policy implementation, administrative decisions, and SSA's intergovernmental footprint
+
+- Relationships between agency ideology and the broader political and social context in which SSA operates
+
+- Bureaucratic structures and processes within SSA that shape bureaucrats' information sharing with Congress
+
+- Relevant datasets available to study these dynamics and produce figures and tables for analysis
+
+
+I expect the assignments collectively to produce 3,000--4,000 reusable words, figures, and source notes. The final stage will revise and integrate that work rather than require 2,000--3,000 additional words.
+
+The cumulative project will:
+
+- Use bureaucratic theories to explain a contemporary public-administration challenge
+
+- Evaluate how SSA's structure affects implementation and democratic oversight
+
+- Connect theory to current events
+
+- Develop an original argument in the bureaucracy--Congress information-sharing literature 
+
+I will use AI only for disclosed tasks such as checking grammar errors and testing a coding scheme; I will verify claims and coding against primary documents.
+
+To limit the workload, each lab will produce a reusable component or source base rather than a separate paper, and the final research product will be a proposal or partial first draft with descriptive evidence, not a completed causal analysis.
+
+
+\bigskip
+
+### Policy Lab 1. Agency Profile Briefer (10\%) - Due Sep 13
+
+For Policy Lab 1, I will provide a comprehensive profile of SSA, including its statutory mission and authority, organizational structure, and degree of independence, and use this assignment as the introduction to my research paper. 
+To make it relevant to the beginning of the paper, I will also explain why understanding SSA matters now and what recent issues have arisen regarding information sharing between SSA bureaucrats and Congress. 
+I will highlight gaps in the literature and explain the importance of studying SSA's bureaucratic agency ideology and its relationship to bureaucrats' information sharing with Congress.
+
+
+\bigskip
+
+
+### Policy Lab 2. Intergovernmental Footprint (15\%) – Due October 18
+
+For Policy Lab 2, I will focus on SSA's intergovernmental relationships by examining the distribution of field offices, budgets, programs, personnel, expertise, and clients across localities, states, tribes, and territories.
+Moreover, I will examine congressional oversight of SSA and consider how the agency's intergovernmental relationships may shape the implementation information that bureaucrats provide to Congress. 
+This analysis will include recent and recurring issues in the SSA context. Examples include the DOGE data-access controversy and related congressional responses, [H.Res. 195](https://www.govinfo.gov/app/details/BILLS-119hres195ih), a resolution of inquiry concerning DOGE's access to SSA systems, and [H.R. 1877](https://www.govinfo.gov/app/details/BILLS-119hr1877ih), the *Protecting Americans' Social Security Data Act*, as well as outward-facing data sharing through System of Records Notices (SORNs) and recurring delays in data-sharing agreements between SSA and the Congressional Budget Office (CBO), documented in the House Budget Committee's discussion of the [CBO Data Sharing Act](https://budget.house.gov/resources/staff-working-papers/hr-7032-the-congressional-budget-office-data-sharing-act).
+
+To meet the assignment without trying to cover every jurisdiction, I will compare at least three contrasting states or jurisdictions. I will examine field-office availability, staffing and budgets where data are available, beneficiary or claimant populations, and the federal--state Disability Determination Services arrangement. 
+
+I will then identify statutes, administrative mechanisms, political variation, and disputes that help explain cross-jurisdictional differences. Tribal and territorial relationships will be incorporated where the evidence supports a valid comparison rather than treated as interchangeable with states. 
+
+This assignment will show variations in implementation capacity and administrative burden, which change the information local implementers, SSA officials, and members of Congress need and contest.
+
+\bigskip
+
+### Policy Lab 3. Implementation Practicum (10\%) – Due November 12
+
+For Policy Lab 3, I will focus on SSA's bureaucratic agency ideology and its relationship to bureaucrats' information sharing with Congress.
+
+To explore multiple dimensions of SSA's agency ideology, I will provide a literature review and identify potential empirical strategies and relevant datasets for examining how bureaucratic agency ideology can influence bureaucrats' information sharing with Congress through committee hearings.
+
+- Literature review: a review of the ways in which agency ideology can influence bureaucratic actors' decision-making and participation in committee hearings, as well as the implications of these dynamics for policy implementation and administrative decisions within SSA.
+  - The literature review will address the roles of ambiguity, discretion, goal congruence, autonomy, oversight, conflict, power, and resources.
+
+\bigskip
+
+### Policy Lab 4. Bureaucracy-Congress Information Sharing (10\%) – Due November 19
+
+Policy lab 4 will build on the literature review from Policy Lab 3 but focus more closely on how bureaucrats share information with Congress through committee hearings. It will also help refine potential empirical strategies and testable hypotheses for the research question.
+
+- Empirical strategies: identify potential strategies for testing the relationship between agency ideology and information sharing, including quantitative analysis of committee-hearing transcripts.
+
+  - Develop hypotheses about the relationship between agency ideology and bureaucrats' information sharing with Congress, using separate measures of institutional context, agenda access, and information content.
+  
+  - I will also explore network analysis of bureaucratic access to congressional agenda-setting venues, as an extension of @ban2026 and @liu2025, to understand how institutional context and ideological alignment can shape the dispersion and centrality of SSA officials in congressional hearing networks.
+  
+  - Idea 1: Whether SSA officials' concentration in specific committees or subcommittees is associated with the amount and type of analytical information they provide.
+  
+  - Idea 2: Whether observable witness roles, especially career officials versus political appointees and program experts versus agency leaders, are associated with different levels of participation, dispersion, centrality, and analytical information provision.
+
+For the broader proposal, I will begin with a bounded set of SSA-related hearings from a feasible period determined. I will code committee, issue, witness affiliation and role, and hearing date; reuse validated measures or replication resources from @ban2026 where possible; and calculate descriptive participation, dispersion, and centrality measures following @liu2025. 
+A full causal model, automated transcript classifier, or ERGM inspired by @leifeld2012 will remain an optional extension unless the number and quality of observations support it.
+
+
+\bigskip
+
+### Final Project. First Draft of the Research Paper/Proposal (25\%) – Due December 17
+
+The final project will synthesize, rather than simply summarize, the policy lab assignments. After each lab, I will revise its reusable section based on feedback and assemble the first draft of a new research proposal or paper. 
+The research draft will be less than 5,000 words and include an introduction, literature review on intergovernmental relations, bureaucratic agency ideology, and bureaucracy--Congress information sharing, theoretical framework, empirical strategy, preliminary descriptive evidence where feasible, and conclusion.
+
+
+\newpage
+
+
+## Week 2 Reading Notes
+
+### Weber (1921) - Chapter 3: The Types of Legitimate Domination \& Bureaucracy
+
+In p.340, @weber2019 highlighted the importance of the *legitimacy* of authority in the classification of rule. He argued that the form of a ruler's claim to legitimacy is crucial in determining the nature of their authority and the means by which they govern.
+He provided an example of a ruler who claims legitimacy through divine right, which would be classified as traditional authority. In contrast, a ruler who claims legitimacy through legal-rational means, such as a constitution or laws, would be classified as having legal-rational authority. 
+The relationship between the ruler and administrative staff illustrations was stood out to me, as it highlighted the need of understanding the different types of authority and their implications for governance. 
+
+\bigskip
+
+In addition to the rational and traditional manners, he also introduced the concept of charismatic authority, which is based on the personal qualities and charisma of the ruler. 
+This type of authority can be highly effective in mobilizing support and inspiring loyalty, but it can also be unstable and dependent on the ruler's personal appeal. 
+I have often questioned how this charismatic nature of authority affects the functioning of a bureaucratic organization/leadership structure, particularly in the context of SSA. 
+
+\bigskip
+SSA would be an interesting agency to study this question since SSA is an agency specifically designed to provide social security benefits to eligible individuals. 
+The agency's leadership and management style may be influenced by the charismatic authority of its leaders, which could impact the way policies are implemented and how staff interact with the public.
+There are many street-level bureaucrats in SSA who have to interact with applicants to distribute benefits, and they may frequently encounter situations where they need to exercise discretion and make decisions based on the types of authority within the agency.
+Understanding the interplay between different types of authority within an agency can provide valuable insights into the dynamics of bureaucratic organizations and their impact on interactions with stakeholders, policy implementation, and service delivery.
+I also believe this concept could apply to components shaping each agency's unique bureaucratic agency ideology, which may influence the agency's decision-making processes, policy priorities, and overall organizational culture. 
+I found agency ideology to be a particularly interesting concept, as it can shape the way an agency approaches its mission and interacts with stakeholders. Different types of legitimate domination across different agency contexts can be derieved from the agency's ideology.
+I still need to question how the agency's ideology is formed and how it evolves over time, as well as how it interacts with other factors such as political pressures, public opinion, and institutional norms.
+
+\newpage
+
+### Sandfort \& Moulton (2015) - Chapter 1: Framing Implementation
+
+Key tables that I want to revisit to understand policy implementation:
+
+- Table 1.1: Indicators of Implementation Effectiveness (p.36)
+- Table 1.2: Multiple Levels of the Implementation System (p.48)
+- Table 1.3: Principles for Cultivating Effective Implementation Practice (p.49)
+
+\bigskip
+
+Key factors to consider when evaluatiing policy implementation:
+
+- Policy domain
+- Initiation
+- Scope
+- Policy type (regulatory vs non-regulatory?; distributive vs redistributive?; mandatory vs voluntary?)
+- Targets
+- Service organizations
+- Frontline staff
+- Desired outcomes
+
+\bigskip
+
+Colorado's ACA implementation example got me thinking about how the implementation of federal policies can vary across states and how state-level factors can influence the effectiveness of policy implementation. 
+Depending on the state's political climate, administrative capacity, and stakeholder engagement, the perception/definition of each element in those tables may significantly differ. 
+This can be a beauty of studying state politics and policy difusion, as it allows for a deeper understanding of how policies are implemented in different contexts and how they can be improved to achieve better outcomes.
+But at the same time, it also highlights the challenges of understanding the process/outcome of implementing federal policies in a diverse and complex political landscape, where state-level factors can significantly impact the success or failure of policy implementation. 
+This complexity signals even *framing* implementation is a challenging task, as it requires a nuanced understanding of the interplay between federal and state governments, as well as the various stakeholders involved in the policy implementation process.
+I wonder how the federal government can better support states in implementing policies effectively, while also respecting state autonomy and local contexts. 
+It is always interesting to think about how federalism and intergovernmental relations can shape policy implementation and the power of bureaucratic agencies in navigating these complexities, although they are non-elected officials.
+If we could measure the power each agency has in the process of policy implementation, it would be interesting to see how the power of different grades/demographics of non-elected officials can influence the success or failure of policy implementation, and how this power can be leveraged to achieve better outcomes for the public.
+Those estimates could be derived from the agency's budget, staffing, and authority, as well as the political and social context in which the agency operates. Again, I think this is a good opportunity to explore the role of agency ideology in shaping policy implementation and administrative decisions, as well as the broader political and social context in which agencies operate.
+
+
+\bigskip
+
+
+### Federal News Network (2026) - Federal Employees face Reality of Schedule Policy/Career
+
+This article highlights the challenges faced by federal employees in navigating the complexities of schedule policies and career development within the federal government.
+It shows each agency's policy outcomes and workforce distributions could be significantly relied on the ideological distance between the agency and the current administration (here, the Trump administration) or the Congress.
+Would federal positions be more likely to be filled by individuals who share the same ideological orientation as the current administration or the Congress, and how does this affect the agency's policy outcomes and workforce distributions?
+I recently came across a study that examined how information sharing between a bureaucrat witness and legislator pair in a congressional hearing can be influenced by the ideological distance between the bureaucrat's agency and the administration [@ban2026].
+The people who make the laws are elected officials, but the people who implement the laws are non-elected officials (i.e., bureaucrats). This disparity in the nature of their roles can create tensions and challenges in the policy implementation process or agency operations. 
+Like how @ban2026 used the congressional hearing as a case study to examine the information sharing between bureaucrats and legislators, I think it would be interesting to explore different layers shaping the ideological distance between bureaucrats and elected officials, which can agency operations and the overall functioning of the government, using hearing transcripts, congressional reports, or other relevant data sources.
+
+
+\newpage
+
+## Week 2 Class Notes (Sep 3, 2026)
+
+### Intro
+
+- Monty Python - Holy grail episode
+  - the scene where the peasants are questioning the legitimacy of King Arthur's authority and the concept of divine right, which is a form of traditional authority. 
+  - The peasants challenge the idea that Arthur has the right to rule based on his lineage or divine favor, and instead argue that authority should be based on merit, competence, and the consent of the governed.
+
+- Weber (1921) - Why do we follow the power of authority?
+  - to avoid chaos and maintain social order, as well as to ensure the efficient functioning of society
+  - for social benefits, such as access to resources, protection, and opportunities for social mobility
+
+- People want to be governed, why?
+    - communal norms (fitting to the community)
+    - reciprocity (if I follow the rules, others will too)
+    - benefits of being governed 
+
+
+### Weber (1921) - 3 Types of Authority
+
+- 1. **Charismatic Authority** 
+  - Obama - left
+  - Trump - right
+
+- What makes the leaders charismatic? 
+  - polarized partisan politics, which can create a sense of loyalty and devotion among followers
+  - their personal qualities, vision, and ability to inspire and mobilize followers
+  - their ability to connect with people on an emotional level and create a sense of shared purpose and identity
+
+- 2. **Traditional Authority** 
+  - custom
+  - longstand
+  - line of succession
+  - appeal to history and continuity
+  - statutory orders
+  - judge rulings
+  - constitution
+  - take out who the head is
+
+- 3. **Rational Legal Authority**
+  - votes, like social contracts
+  - based on rules and laws, which are established through a rational-legal process
+  - benefits, sanctions, orders, and actors
+
+
+- **Bureaucracy = rational legal authority** [@weber2019]
+  - rational-legal authority is the foundation of modern bureaucratic organizations, which are designed to operate efficiently and effectively within a legal framework
+  - bureaucracies are characterized by hierarchical structures, formal rules and procedures, and specialized roles and responsibilities
+  - authority gets attached to the office
+  - the office itself: where the authority is located (the person isn't matter)
+
+- Escalating sanction because the ticket exists in the system
+  - people believe that the rules are fair and legitimate, and that they will be enforced to pay the consequences
+
+- Police officers - Rational vs Traditional Authority
+  - *Rational*: the officer is enforcing the law based on established rules and procedures, and the authority is derived from the legal framework that governs their actions
+  - *Traditional*: the officer is enforcing the law based on their personal authority or status within the community, which may be based on factors such as age, race, experience, or social standing
+
+- @weber2019 doesn't bring up..
+- community-based practices: 
+  - how the community perceives the legitimacy of authority and the role of social norms and expectations in shaping compliance with rules and regulations
+  - how informal networks and relationships can influence the exercise of authority and the enforcement of rules, particularly in contexts where formal legal frameworks may be weak or absent
+  - people's practices: how individuals navigate and interact with bureaucratic systems in their daily lives
+
+- Charismatic authority is hard to pick out:
+  - often associated with strong personal leadership and the ability to inspire and mobilize followers, but it can also be unstable and dependent on the leader's personal appeal
+  - people want to obey to the charismatic leader because they believe in their vision and trust their judgment, rather than because of any formal legal or traditional authority that the leader may hold
+  - social influencing matters too!
+
+- Bureaucracy is a *rational-legal authority*, but it can also be influenced by traditional and charismatic authority, as well as by social norms and expectations.
+  - they are delegated authority from the elected officials, but they are not elected officials themselves
+  - *rules and knowable things make rational-legal authority have to be known and bounded, but also divined in scope*
+
+
+\newpage
+
+### SSA and Their Bureaucratic Authority
+
+Use the sourcebook [@sourcebook]
+
+- SSA: Executive Branch - Independent Agency
+  - 64,400 employees, based on the data reported in the sourcebook
+  - large, single-headed administration located outside the Executive Office of the President (EOP) and executive departments
+  - 17 political appointees, compared with 160 in the much smaller Department of Education
+  - formerly part of the Department of Health and Human Services (HHS); Congress removed SSA from HHS in 1994 to alleviate the budgetary and managerial pressures of being inside a department
+  - the Commissioner serves a six-year term, which can span presidential administrations; the sourcebook reports statutory removal protection for neglect of duty or malfeasance in office
+  - the structure provides some insulation from direct presidential and departmental control, but SSA still operates under statutes, regulations, congressional oversight, and presidential appointments [@sourcebook, pp. 34, 52]
+
+- Map out rational legal authority:
+  - The SSA operates under a rational-legal framework, where decisions are made based on established rules and procedures
+  - authority is derived from the legal structure of the organization, not from personal characteristics or historical precedent
+
+- Table 6. Agency-Specific Personnel Systems Authorized by Statute (p.76)
+  - SSA falls under the category of agencies with statutory limitations on the number of employees compensated without regard to civil service provisions
+
+- Table 10. Agencies with Explicit Double “For-Cause” Protections (p.99)
+  - SSA is one of the agencies with explicit double "for-cause" protections, which means that employees can only be removed for specific reasons, providing them with job security and protection from arbitrary dismissal
+  - traditional double for-cause protection, second level of SSA: OCA  
+  - SSA: for-cause and career for SES employees
+
+- Table 15. Government-Wide Position Mandates
+  - 1. Chief Financial Officer (CFO) of SSA: appointed by the head of the agency
+    - "The Chief Financial Officers Act of 1990 sought to enhance the financial management practices of the federal government. One of the Act’s stated purposes was to designate a Chief Financial Officer (CFO) in each executive department and major executive agency" [@sourcebook, p. 114].
+  
+  - 2. Chief Information Officer (CIO) of SSA: appointed by the head of the agency
+    - "The Clinger-Cohen Act, designed to reform information technology management in the federal government, established agency Chief Information Officers" [@sourcebook, p. 114].
+
+  - 3. Inspector General (IG) of SSA: appointed by the President and confirmed by the Senate
+    - "The Inspector General Act of 1978 established Offices of Inspector General in various agencies across the executive branch. These offices were to provide a means for keeping the head of the agency and Congress fully informed about problems relating to the administration of agency programs and operations" [@sourcebook, p. 114].  
+    - SSA: establishment appointed by the President by and with the advice and consent of the Senate
+
+- Table 18. Agencies with Statutory Adjudicatory Authority (p.118)
+  - Agency employs administrative law judges (ALJs) to conduct hearings and make determinations on claims for benefits, which is a form of rational-legal authority
+
+- Table 19. Details of Federal Agencies’ Rulemaking Activities (p.119)
+  - Agency has promulgated a significant rule in the last 15 years, as of Dec 2017
+
+- Examples of when SSA authority is rational-legal, traditional, and charismatic:
+
+  - **Rational-legal authority**
+    - SSA employees determine eligibility and benefit amounts by applying the Social Security Act, agency regulations, formal procedures, and standardized formulas
+    - administrative law judges conduct hearings and decide benefit claims through legally established adjudicatory procedures
+    - authority belongs to offices such as Commissioner, Inspector General, Chief Financial Officer, and Chief Information Officer rather than to the personal identity of each officeholder
+    - applicants comply with documentation requirements, deadlines, and appeal procedures because these rules are formally established and knowable
+
+  - **Traditional authority**
+    - traditional authority is not the formal legal basis of SSA power because SSA officials do not receive authority through lineage, inheritance, or longstanding personal status
+    - informal deference may still develop around seniority, established office routines, institutional memory, and the idea that “this is how the agency has always done it”
+    - longstanding public expectations surrounding retirement, disability, and survivors benefits may strengthen SSA's legitimacy through continuity, even though the programs remain legally authorized
+
+  - **Charismatic authority**
+    - an SSA Commissioner or political leader may gain support for modernization, customer-service reform, or field-office changes through personal credibility, vision, and persuasive leadership
+    - employees or stakeholders may follow such a leader because they trust the individual, not only because the office formally commands compliance
+    - charismatic influence is person-dependent and may weaken when the leader leaves; it cannot replace SSA's statutes, regulations, or formal procedures
+
+  - **How to distinguish the three types**
+    - focus on why people obey: formal rules and offices indicate rational-legal authority, inherited customs indicate traditional authority, and devotion to a leader's personal qualities indicates charismatic authority
+    - the same agency may display all three types, but modern bureaucracy is primarily grounded in rational-legal authority [@weber2019]
+
+\newpage
+
+### Agency Functions and Policy Formulation
+
+- 1. Independence
+
+- 2. How they formulate their policy?
+  - agencies have leeway to develop expertises
+  - how insulated and knowledge generation within the agency? how much autonomy do they have to make decisions?
+
+- 3. Different funding structure
+
+- Pam's APSA paper on agency procedure, judicial review, leadership
+
+- Datasets I can look for:
+
+  - House.gov: provides most updated US code info
+  
+  - Sourcebook data
+  
+  - Sourcebook appendix
+
+\bigskip
+
+### Weber: Why do we obey bureuacrats?
+
+- @weber2019: how obedience gets organizaed and sustained through bureaucrats rational-legal authority
+
+- Why people obey?
+  - people are already in the system, and they want to avoid chaos
+
+- He leaves out: what's the government/legal contracts in the first place?
+
+- I didn't vote for you! 
+  - but, in terms of social contract, we have agreed to be governed by the government, either explicitly or implicitly, through a social contract that establishes the rules and norms of society
+
+- Social contract: 
+  - we obey the government because we recognize its legitimacy and authority, which is derived from the consent of the governed and the rule of law
+  - we obey the government because we believe that it serves our collective interests and promotes the common good, even if we may not always agree with specific policies or decisions
+
+- Constitution? What do we have?
+  - the Constitution establishes the framework for the federal government and defines the powers and limitations of each branch
+  - it also provides the basis for the rule of law and the protection of individual rights
+
+- When it comes to **power** in bureaucracy: @lukes2017power
+  - Pam's fav book 
+  - original one was written in 1974
+  - power: to make it want what they want them to want 
+  - also look at @foucault2019power
+  - Power: does it come from top down? or bottom up? or both?
+
+- What does Weber worry about?
+  - bureaucrats sway the leadership
+
+- What you are missing: curiosity creates another glass of wine in the cocktail party
+
+- Michener's first book: how medicaid receivers built their own power and influence in the system, and how they can shape policy outcomes through their interactions with bureaucrats and elected officials?
+  - I also like her work!
+
+- Ford, Soss, Lipsky: what power authority looks like in bureaucratic states? 
+  - also my fav authors
+
+- Statutory code is building up...
+  - write piece of legislations... can produce a lot of rules and regulations, but how do they get implemented?
+
+\bigskip
+
+### Social Construction of Target Population
+
+- Social construction [@schneider1993social]: 
+  - how the target population is socially constructed and perceived by policymakers, bureaucrats, and the public
+  - how these perceptions influence policy design, implementation, and outcomes
+  - deserving? or undeserving?
+  - good reading 
+
+\bigskip
+
+### Sandfort \& Moulton (2015)
+
+- Bureaucrats have thoughts of choices
+
+- Effective implementation: deliverate choices in different layers in the implementation process, which can be influenced by bureaucrats' values, beliefs, and experiences
+  - policy field
+  - street-level bureaucrats (consitituents, clients, and citizens)
+  - organizational culture and norms
+
+- What do we need for effective implementation?
+  - 1. real changes
+  - 2. changes need to be absorbed
+  - 3. quality of the work environment
+
+\bigskip
+
+### Federal News Network (2026)
+
+- Schedule C: policy experts
+
+- Trump: done away with the system 
+
+- Different types of bureaucrats:
+  - workers: working so hard - driven; we need to do this thing for the public good
+  - slackers: shiwers - try to do as little as possible
+  - zealots: driven by ideology - want to make a difference; hold a strong ideological stake 
+
+- What if we removes the protection?
+
+\bigskip
+
+### Proposal comments (Sep 3)
+
+- incorporate all the contents in my paper
+
+- make a research proposal or the first draft 
+
+Hi Jody,
+
+I think for each lab you should build to a research proposal/first draft of a new research paper.  These can overlap with your existing papers but should be something new.  
+
+Lab 1: background, descriptives, etc. on SSA (written as the beginning of a manuscript or proposal). 
+
+Lab 2: add to the manuscript with sections on SSA across the country — intergovernmental relationship, office distribution across localities, states, tribes, and territories.  Consider budgets and personnel here too...along with constituents/clients across those areas. ...and so on!
+
+Send me some details for how you see those last assignments panning out.
+
+Best,
+Pam
+
+- Richard stuff would be interesting
+
+- Mentioned Ban et al. 2026
+
+- keep adding on subsequence sections and covering contents from the policy labs assginmnets
+
+
+
+\newpage
+
+## Terms from the Sourcebook
+
+### Housekeeping Variables (p.153)
+
+- Statutory mission and authority: google the US code found on the sourcebook
+
+- **Name**
+  - name of the agency
+
+- **Statute**
+  - sections of the U.S. Code that establish the agency
+
+- **Date of Creation**
+  - date the agency's establishing statute became law
+  - in most cases, the date of creation is clear; in uncertain cases, the sourcebook relies on the agency's own interpretation
+  - example: the Department of Labor was created as an independent agency in 1888, became part of the Department of Commerce and Labor in 1903, and became an executive department in 1913
+  - source: agency statute and agency-issued statements about agency history, usually from the agency's website
+
+- **EOP**
+  - coded `1` if the agency is a component of the Executive Office of the President (EOP) and `0` otherwise
+  - source: agency statute
+
+- **Exec. Dept.**
+  - coded `1` if the agency is an executive department or a component of an executive department and `0` otherwise
+  - source: agency statute
+
+- **Bureau**
+  - coded `1` if the agency is a component of a larger department or agency and `0` otherwise
+  - source: agency statute
+
+- **Corporation**
+  - coded `1` if the agency is a wholly owned government corporation and `0` otherwise
+  - federally chartered private corporations and nonprofit entities are coded `0`
+  - source: 31 U.S.C. § 9101(3) (2017)
+
+- **CodeRef**
+  - coded `1` if the agency is referenced anywhere in the United States Code and `0` otherwise
+  - source: United States Code
+
+- **StatMandate**
+  - coded `1` if a federal statute mandates the establishment of the agency and `0` otherwise
+  - example: the statute authorizing the Food and Drug Administration states, “There is established in the Department of Health and Human Services the Food and Drug Administration.”
+  - example: the statute authorizing the National Telecommunications and Information Administration states, “There shall be within the Department of Commerce an administration to be known as the National Telecommunications and Information Administration.”
+  - source: agency statute
+
+- **StatPermit**
+  - coded `1` if a federal statute permits, but does not mandate, the establishment of the agency and `0` otherwise
+  - example: the statute recognizing the Natural Resources Conservation Service states, “The Secretary is authorized to establish and maintain within the Department [of Agriculture] a Natural Resources Conservation Service.”
+  - source: agency statute [@sourcebook, pp. 153-154]
+
+The remaining variables below are summarized from the agency structure codebook [@sourcebook, pp. 153-171].
+
+### Leadership Structure and Agency Personnel (pp.153-156)
+
+- **Multimember**
+  - coded `1` if the agency is a multi-member commission, has a board of directors, or has a similar multi-member body; coded `0` otherwise
+  - source: agency statute
+
+- **NumberMembers**
+  - number of voting members on a multi-member commission or board
+  - coded `.` if the agency is not a commission or does not have a board
+  - applies whether or not members have fixed terms
+  - source: agency statute
+
+- **QuorumRules**
+  - coded `1` if the statute specifies the number of commissioners or board members constituting a quorum
+  - coded `0` if the statute does not specify a quorum and `.` if quorum rules are not applicable
+  - example: a majority of appointed members constitutes a quorum for the Corporation for National and Community Service
+  - source: agency statute
+
+- **QuorumNumber**
+  - when `QuorumRules = 1`, records the statutory number of members or commissioners required for a quorum
+  - source: agency statute
+
+- **Appointees**
+  - **PAS**: number of positions filled by presidential appointment with Senate confirmation
+  - **NA**: number of Senior Executive Service general positions filled by noncareer appointment
+  - **SchC**: number of positions filled through Schedule C excepted appointments
+  - **PA**: number of presidentially appointed positions not requiring Senate confirmation, excluding noncareer SES and Schedule C positions
+  - **XS**: number of statutory excepted policy and supporting positions not classified as PAS, NA, SchC, or PA
+  - source: *Policy and Supporting Positions*, 114th Congress (2016)
+
+- **Agency-specific Personnel**
+  - coded `3` if 5 U.S.C. § 5102 excludes the agency's employees from the statutory definition of “employee”
+  - coded `2` if the agency statute permits an agency-specific employment system
+  - coded `1` if the statute allows only a limited number of employees to fall outside civil-service rules
+  - coded `0` if the statute provides no agency-specific exception from civil-service rules
+  - source: 5 U.S.C. § 5102 (2017) and agency statute
+
+- **Employees**
+  - number of agency employees as of September 2016
+  - primary source: Office of Personnel Management, Central Personnel Data File
+  - when OPM data are unavailable, estimates come from OMB budget documents, Congressional Research Service reports, agency officials, and secondary sources
+
+### Limitations on Appointments (pp.156-159)
+
+- **Citizen of U.S.**
+  - coded `1` if the statute requires the agency head, commissioners, or board members to be U.S. citizens; coded `0` otherwise
+  - source: agency statute
+
+- **Civilian**
+  - coded `1` if the statute requires the agency head, commissioners, or board members to be civilians; coded `0` otherwise
+  - source: agency statute
+
+- **Geographic**
+  - coded `1` if the statute imposes a geographic limitation or directs consideration of geographic representation in selecting the agency head, commissioners, or board members; coded `0` otherwise
+  - example: Federal Reserve Board appointments must account for geographic divisions and may not include more than one member from the same Federal Reserve district
+  - source: agency statute
+
+- **Demographic**
+  - coded `1` if the statute imposes or encourages a demographic limitation involving race, ethnicity, age, gender, or another characteristic; coded `0` otherwise
+  - example: one member of the Corporation for National and Community Service must be between ages 16 and 25
+  - source: agency statute
+
+- **Expertise**
+  - coded `1` if the statute requires expertise or experience for the agency head, commissioners, or board members; coded `0` otherwise
+  - example: Chemical Safety and Hazard Investigation Board members must possess specified technical qualifications and knowledge
+  - source: agency statute
+
+- **LLExpertise**
+  - coded `1` if the statute requires expertise or experience for officials below the agency-head level; coded `0` otherwise
+  - excludes expertise requirements for advisory-commission members
+  - source: agency statute
+
+- **Conflict of Interest**
+  - coded `1` if the statute restricts conflicts of interest in selecting or employing agency members; coded `0` otherwise
+  - source: agency statute
+
+- **Congressional Input**
+  - coded `1` if the statute gives Congress a role in nominations beyond Senate confirmation; coded `0` otherwise
+  - includes recommendations by congressional leaders or service by members of Congress as voting board members
+  - source: agency statute
+
+- **Party Balancing**
+  - coded `1` if the statute limits how many commission or board members may belong to the same political party
+  - coded `0` if the agency has a commission or board but no party limit and `.` if the agency is not a commission or board
+  - source: agency statute
+
+### Limitations on Removals (pp.159-161)
+
+- **Fixed Terms**
+  - coded `1` if the statute specifies a fixed term for the agency head, commissioners, or board members; coded `0` otherwise
+  - source: agency statute
+
+- **Term Length**
+  - when `Fixed Terms = 1`, records the number of years in each statutory term
+  - source: agency statute
+
+- **LL Fixed Terms**
+  - coded `1` if the statute gives a fixed term to an official below the agency-head, commissioner, or board-member level; coded `0` otherwise
+  - excludes members of advisory commissions
+  - source: agency statute
+
+- **Staggered Terms**
+  - coded `1` if a commission or board statute staggers member terms across nomination years
+  - coded `0` if terms are not staggered and `.` if the agency is not a commission or board
+  - source: agency statute
+
+- **For Cause**
+  - coded `1` if the President may remove the agency head, commissioner, or board member only for neglect of duty, malfeasance, inefficiency, or similar cause; coded `0` otherwise
+  - source: agency statute
+
+- **ServePresident**
+  - coded `1` if the statute states that officials serve at the pleasure of the President; coded `0` otherwise
+  - source: agency statute
+
+- **Continuation Replacement**
+  - coded `1` when an official with a fixed term may remain until a successor is appointed and qualified
+  - coded `0` when no continuation is authorized and `.` when the position has no fixed term
+  - source: agency statute
+
+- **Acting Service Rules**
+  - coded `2` if the statute allows the President to designate an acting agency head during absence, disability, or vacancy
+  - coded `1` if the statute designates a particular agency official to act and does not allow presidential designation
+  - coded `0` if the statute is silent
+  - source: agency statute
+
+### Agency Head Selection and Retention (pp.162-163)
+
+- **PAS Head**
+  - coded `1` if the statute provides for presidential appointment of the agency head with Senate advice and consent, and the head is not an official from another agency; coded `0` otherwise
+  - source: agency statute
+
+- **President Selects Chair**
+  - coded `1` if the President designates the agency head or chair without Senate advice and consent; coded `0` otherwise
+  - source: agency statute
+
+- **Sec/Com Selects Head**
+  - for a bureau, coded `1` if the statute authorizes the head of the parent organization to appoint the bureau head; coded `0` otherwise
+  - source: agency statute
+
+- **Elected Head**
+  - coded `1` if agency members or commissioners select the agency head from among themselves; coded `0` otherwise
+  - source: agency statute
+
+- **Outside Head**
+  - coded `1` if the statute assigns agency leadership to an official who primarily holds an office outside that agency; coded `0` otherwise
+  - source: agency statute
+
+- **Head Removal**
+  - coded `2` if the agency head may be removed only for inefficiency, neglect of duty, or malfeasance
+  - coded `1` if the head has a specified term but no head-specific for-cause protection
+  - coded `0` if the statute specifies neither a term, for-cause protection, nor service at the President's pleasure
+  - for boards and commissions, this variable treats the chair as the agency head
+  - source: agency statute
+
+- **ChairServePresident**
+  - coded `1` if the statute states that the agency head serves at the pleasure of the President; coded `0` otherwise
+  - source: agency statute
+
+### Features Insulating Agency Policy (pp.164-166)
+
+- **No OMB Budget Review**
+  - coded `2` if the President must send the agency's budget request to Congress without revision alongside the President's proposal
+  - coded `1` if the agency submits its budget directly to Congress without OMB review
+  - coded `0` if the agency cannot bypass OMB budget review
+  - source: agency statute, OMB Circular A-11, and OMB guidance
+
+- **No OMB Rule Review**
+  - coded `1` if all agency regulatory actions are exempt from Office of Information and Regulatory Affairs review; coded `0` otherwise
+  - source: agency statute, Executive Order 12,866, and 44 U.S.C. § 3502 (2017)
+
+- **No OMB Communications Review**
+  - coded `2` if the agency claims informal legislative-bypass authority without explicit statutory authority
+  - coded `1` if the statute exempts agency communications to Congress from OMB coordination and clearance
+  - coded `0` if communications must undergo OMB review
+  - source: agency statute, OMB Circular A-19, and OMB guidance
+
+- **Independent Litigating**
+  - coded `1` if the agency's authorizing statute clearly permits it to represent itself in legal proceedings; coded `0` otherwise
+  - exceptions to the Attorney General's general control of federal litigation are interpreted narrowly
+  - source: agency statute
+
+- **Independent Funding**
+  - coded `5` if fees or charges cover a substantial portion of agency operating costs
+  - coded `4` for statutory banking-like authority, including deposits, lending, borrowing, insurance, or securities activities
+  - coded `3` for a working-capital or similar no-year fund
+  - coded `2` for reasonable administrative fees for products, services, or data
+  - coded `1` for authority to accept and use gifts, donations, or property
+  - coded `0` when the statute provides no funding authority outside congressional appropriations
+  - source: agency statute
+
+- **No Approp**
+  - coded `1` if fees or charges may cover a substantial portion of agency operating costs; coded `0` otherwise
+  - agencies coded `1` here are also coded `5` under `Independent Funding`
+  - source: agency statute
+
+### Congressional Oversight (p.167)
+
+- **Reporting Requirements**
+  - number of recurring agency reports to Congress required by statute
+  - excludes government-wide reporting requirements applicable to most or all agencies
+  - source: Clerk of the U.S. House of Representatives, *Reports to Be Made to Congress* (2017)
+
+- **Number Committees**
+  - number of congressional committees that the statute identifies as overseeing the agency through reports, testimony, legislative vetoes, or another mechanism
+  - source: agency statute
+
+### Government-Wide Management Laws (pp.167-169)
+
+- **CIO**
+  - coded `1` if the agency is statutorily required to have a Chief Information Officer; coded `0` otherwise
+  - source: 40 U.S.C. §§ 11101(2), 11315 and 31 U.S.C. § 901 (2017)
+
+- **IG**
+  - coded `3` for an Inspector General Act “establishment” with a presidentially appointed, Senate-confirmed Inspector General
+  - coded `2` for a “designated federal entity” whose Inspector General is appointed by the agency
+  - coded `1` for a “federal entity” with an audit office that reports annually to Congress and OMB
+  - coded `0` if none of these classifications applies
+  - source: Inspector General Act and OMB classifications
+
+- **CFO**
+  - coded `2` if the Chief Financial Officers Act requires a presidentially appointed, Senate-confirmed CFO
+  - coded `1` if the Act requires a CFO appointed by the agency head from the competitive service or Senior Executive Service
+  - coded `0` if the Act imposes no CFO requirement
+  - source: 31 U.S.C. § 901(b) (2017)
+
+- **Sunshine**
+  - coded `1` if the agency is subject to the Government in Sunshine Act of 1976; coded `0` otherwise
+  - coding focuses on the agency itself, not separate entities located within it
+  - source: agency statute and 5 U.S.C. § 552b (2017)
+
+- **Advisory Commissions**
+  - coded `1` if the statute establishes an active advisory commission attached to the agency or a subpart; coded `0` otherwise
+  - terminated advisory commissions and coordinating committees do not qualify
+  - source: agency statute
+
+### Other Key Structural Features (pp.170-171)
+
+- **Establish Advisory Commissions**
+  - coded `1` if the statute authorizes creation of one or more advisory commissions for the agency or its subparts; coded `0` otherwise
+  - source: agency statute
+
+- **Outside Approval**
+  - coded `1` if one or more agency actions require advance approval from an outside executive or legislative actor; coded `0` otherwise
+  - requirements merely to consult or consider another body's views do not count
+  - source: agency statute
+
+- **Rulemaking**
+  - coded `1` if the statute authorizes the agency to promulgate rules or regulations; coded `0` otherwise
+  - source: agency statute, verified through the Federal Register
+
+- **Significant Rule**
+  - coded `1` if the agency promulgated a rule within the preceding 15 years that the Unified Agenda classified as significant under Executive Order 12,866; coded `0` otherwise
+  - source: Federal Register
+
+- **Adjudication**
+  - coded `1` if the statute authorizes the agency or a subpart to adjudicate, take testimony, receive evidence, or employ administrative or administrative law judges; coded `0` otherwise
+  - authority merely to hold hearings is insufficient without another statutory indicator of adjudication
+  - source: agency statute
+
+- **Administrative Law Judges**
+  - coded `1` if the agency employs Administrative Law Judges and `0` otherwise
+  - source: Office of Personnel Management's March 2017 agency-level list of federal Administrative Law Judges
+
+
+\newpage

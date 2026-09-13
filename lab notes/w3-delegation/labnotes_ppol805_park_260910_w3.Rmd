@@ -1,0 +1,671 @@
+---
+title: |
+  \large \textbf{Lab Notebook - Week 3} 
+subtitle: |
+ Delegation \vspace{0.2cm}
+author: "Jody Park"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+    latex_engine: xelatex
+colorlinks: true
+urlcolor: black
+linkcolor: blue
+fontsize: 11pt
+bibliography: "references.bib"
+csl: "apanodoi.csl"
+link-citations: true
+reference-section-title: References
+header-includes:
+  - \usepackage[capposition=top]{floatrow}
+  - \usepackage{placeins}   
+  - \usepackage{dcolumn}
+  - \usepackage{booktabs}
+  - \usepackage{siunitx}
+  - \usepackage{amsmath}
+  - \usepackage{enumerate}
+  - \usepackage[shortlabels]{enumitem}
+  - \usepackage[hang,flushmargin]{footmisc}	
+  - \usepackage{makecell}
+  - \usepackage{url}
+  - \usepackage{longtable}
+  - \usepackage{graphicx}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{xcolor}
+  - \usepackage[most]{tcolorbox}
+  - \newtcolorbox{qbox}{enhanced,breakable,boxrule=0.5pt,arc=2mm,
+    colback=gray!10,colframe=black!50,left=6pt,right=6pt,top=6pt,bottom=6pt}
+  - \usepackage{fontspec}
+  - \usepackage[margin=1in]{geometry}
+  - \usepackage{titling}
+  - \setlength{\droptitle}{-1in}
+  - \usepackage{setspace}
+  - \setstretch{1.2} 
+---
+
+```{r setup, include = FALSE, message=FALSE, results=FALSE, echo = FALSE}
+# R libraries
+# data manipulation
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(haven)
+library(readr)
+library(caret)
+library(modelr)
+library(broom)
+library(ggplot2)
+library(plotly)
+library(png)
+library(openxlsx) 
+library(kableExtra)
+library(patchwork)
+library(texreg)
+library(estimatr)
+library(MASS) 
+library(Matrix)
+library(sandwich)   # vcovHC
+library(lmtest)     # coeftest
+library(boot)       # bootstrap
+library(conflicted)
+library(car)
+library(cowplot)
+library(AER)
+library(MatchIt)
+library(labelled)
+
+conflict_prefer("filter", "dplyr")
+conflict_prefer("select", "dplyr")
+
+# For figures
+knitr::opts_chunk$set(
+                      fig.width = 9, fig.height = 7, fig.retina = 3,
+                      out.width = "100%",
+                      cache = FALSE,
+                      echo = TRUE,
+                      message = FALSE, 
+                      warning = FALSE,
+                      hiline = TRUE
+                      )
+options(tinytex.verbose = TRUE)
+
+knitr::knit_hooks$set(plot = function (x, options) {
+  float_correct <- function(f, y, opts)  {
+    if (is.null(opts$regfloat) || opts$regfloat==FALSE)
+      paste0(f(y, opts), "\n\n\\FloatBarrier\n")
+    else
+      f(y, opts)
+  }
+  if (!is.null(options$out.width) || !is.null(options$out.height) ||
+      !is.null(options$out.extra) || options$fig.align != "default" ||
+      !is.null(options$fig.subcap)) {
+    if (is.null(options$fig.scap))
+      options$fig.scap = NA
+    return(float_correct(knitr:::hook_plot_tex, x, options))
+  }
+  return(float_correct(knitr:::hook_plot_md_base, x, options))
+})
+
+```
+
+# Goals for this week's lab notebook
+
+- Week 3 reading notes
+
+- How statues allocated
+
+- Procedural instructions for SSA
+
+- Conventional stateholder analysis
+
+- Policy field analysis
+
+- Look at administrative workforce data
+
+
+\bigskip
+
+# Week 3 Reading Notes
+
+## Huber \& Shipan (2002) - Chapter 1: Laws, Bureaucratic Autonomy, and the Comparative Study of Delegation
+
+- Happy to revisit one of my favourite books
+
+- p.1: legislative statutes: "amorphous"; "citizens care about the outcomes of policies, not the details of how they are implemented" [@huber2002]
+
+- Systematic political \& institutional factors
+
+- design of legal authority and bureaucratic autonomy
+
+- Delegation toward bureaucrats... Should we care for... 
+  - congressional hearings: part of it is also trying to get reelected (not just getting info)
+  - agency ideology
+  - is it more systematic/institutional vs congress-bureaucrat relationship?
+
+- Q. how non-elected officials (bureaucrats) can influence policy outcomes? 
+  - bureaucrats have discretion in implementing policies, which can lead to variations in policy outcomes across different agencies and contexts
+  - bureaucrats may have their own preferences and priorities, which can shape the way they implement policies and interact with elected officials
+  - bureaucrats may have access to specialized knowledge and expertise that can inform policy decisions and influence the legislative process
+
+- Delegation: policymaking 
+  - Congress delegates authority to bureaucrats to implement policies and make decisions on their behalf
+  - This delegation can be influenced by political, institutional, and contextual factors, which can shape the degree of autonomy and discretion that bureaucrats have in carrying out their responsibilities
+
+- If you give agencies leeways:
+  - Hard to gather info about what they are doing
+  - Hard to hold them accountable
+
+- @huber2002's theory: how these 4 factors affect the design of legislation:
+  - 1. Policy conflict between the president and bureaucrats
+  - 2. Capacity of politicians
+  - 3. Bargaining environment
+  - 4. Non-statutory factors $\rightarrow$ policy implementation
+  - Uncover systemtaic political \& institutional factors that shape the design of legal authority and bureaucratic autonomy
+
+- p.13: "strategies for delegation policymaking authority to bureaucrats often driven as much by asymmetricies in political opportunities to influence bureaucrats" [@huber2002]
+
+
+\bigskip
+
+## Mettler (2011) - Chapter 1: Governance Unseen 
+
+- Government assistant is invisible
+
+- Distributions can't be seen by the public, but they are crucial for understanding how government programs operate and affect citizens' lives
+  - benefits don't always go to the people who are in need
+
+- Behavioral economics: evidence-based policymaking
+  - Uses empirical data and research to inform policy decisions and evaluate the effectiveness of government programs.
+  - But... I was thinking:
+    - How can we ensure that the data used to inform policy decisions is accurate, reliable, and representative of the populations affected by the policies?
+    - How can we balance the need for evidence-based policymaking with the need for democratic accountability and public participation in the policy process?
+    - How can we ensure that evidence-based policymaking does not reinforce existing inequalities or biases in society?
+
+
+\bigskip
+
+
+## Federal News Network (2026) - Education Dept moves more work to other agencies, but hasn’t reassigned more employees yet
+
+
+
+
+\bigskip
+
+
+## Statute - SSA
+
+- It is the foundational Social Security Act of 1935. The law is officially codified in the United States Code under [42 U.S. Code Chapter 7](https://www.law.cornell.edu/uscode/text/42/chapter-7). 
+
+- Specifically, [42 U.S. Code § 901](https://www.law.cornell.edu/uscode/text/42/901) is the individual statute that establishes the SSA as an independent agency within the executive branch of the federal government.
+
+
+\newpage
+
+
+# Class Notes - Week 3 (Sep 10, 2026)
+
+## Statutory Authority, Discretion, Delegation - Huber \& Shipan (2002)
+
+- Agency's authority comes from variety statues
+
+- Pam's scholarly papa: Shipan
+
+- @huber2002: Statues: Set boundaries of action
+
+  - Policy: substance of what they do
+
+  - Procedural instruction: how they make their decisions
+
+  - Help and incentivized what agency does
+
+- **Discretion**: multifaced
+  - Statues: set boundaries of action
+  - Policy: substance of what they do
+  - Procedural instruction: how they make their decisions
+  - Help and incentivized what agency does
+  - Discrection: perceived by the public, Congress, and the agency itself - leeway of doing things sometimes
+
+- Discretion - when is good for agency to have discretion vs not?
+
+  - Ambiguity: when the policy is ambiguous, it can be difficult for agencies to interpret and implement the policy effectively. 
+    - In such cases, discretion may be necessary to allow agencies to adapt and respond to changing circumstances.
+  
+  - Transparency \& Visibility: when the public and Congress can easily monitor and evaluate agency actions, discretion may be less necessary, as agencies are held accountable for their decisions and actions. 
+
+- 1. Transparency/visible (information)
+
+- 2. Ambiguity (context)
+
+- 3. Subject matter (expertise - technical)
+
+- **Delegation**: all about uncerntainty
+  - Trying to save my resources 
+  - Delegate so I don't have to do it vs I don't know how to do this thing
+  - Delegate for people who have expertise
+  - Reduce uncerntainties
+  - Continues to operate in a way you want to be operated... but this is hard to do because you don't know what they are doing
+
+- Predictibility of interest groups? it's very complicated
+  - Expensive in terms of resources 
+
+- Statue
+  - If it's too specific, to hard to get passed
+  - So reduce technical uncerntainty ... so make it ambiguous so that the agency can figure out how to implement it
+
+- High Discretion to agency
+  - 1. Political uncerntainty can be created 
+    - 1) agency drift (agency's policy preferences diverge from those of the delegating authority, such as Congress or the President)
+    - 2) agency shinking (they don't do their job)
+    - 3) agency capture (agency is controlled by the industry/interest groups it regulates)
+      - captured by purpose or not on purposed
+  - 2. Technical uncerntainty can also be a concern
+
+- Example: new-born screening program (PKU screening)
+  - different numbers of dieases were screened based on the state, which created a lot of uncertainty and variation in the implementation of the program across states.
+  - statutory specifications held them back
+  - statutory ambiguity allowed them to adapt to the changing circumstances and implement the program effectively.
+  - tech advancement: also allowed states to have different screening programs based on their resources and capabilities, which created variation in the implementation of the program across states.
+
+
+## Mettler (2011) - Submerged Policies
+
+- Submerged policies: 
+  - Policies that are not visible to the public, but have significant impacts on citizens' lives and well-being.
+  - These policies can be difficult to evaluate and monitor, as they may not be subject to the same level of scrutiny or oversight as more visible policies.
+  - @grose2015's study: Grimmer, Justin, Solomon Messing, and Sean J. Westwood. 2012. “How Words and Money Cultivate a Personal Vote.” *American Political Science Review* 106(4): 703–719.
+    - Sent every U.S. senator two constituent letters in 2007.
+    - One supported immigration reform; one opposed it.
+    - Compared how senators answered constituents holding different positions.
+    - Senators generally disclosed their actual vote.
+    - But they tailored their justification:
+      - Reinforcing actions for agreeing constituents.
+      - Compensating actions for disagreeing constituents.
+    - Tailored explanations increased constituent support—even when senator and constituent disagreed.
+  
+  
+
+## Policy field
+
+- Traditional policy analysis: Stakeholder analysis
+  - levels of influence between federal agencies
+  - identify significance - who is important to the agency's mission and goals
+  - interst positions
+  - relevant policy powers
+
+- What is missing in stakeholder analysis?
+  - perspectives of the people affected by the policy
+  - long-term consequences of the policy
+  - alternative approaches to addressing the problem
+  - structural independence? 
+  - do they have submerged instruments? 
+
+- Policy field (add this dimension to our assignment 1)
+  - Who cares about $\rightarrow$ networks of institutions, players, actors $\rightarrow$ making policies and linkages 
+  - Policy implementation: bounded networks 
+  - worksheet_policy_field_audit.pdf; worksheet_policy_field_visual_diagram.pdf: can be used for appendices 
+
+\bigskip
+
+### Policy Field Audit
+
+Policy field analysis can help make sense of the complexity in an implementation system. For the SSA context, I focus on the disability determination process for Social Security Disability Insurance (SSDI) and Supplemental Security Income (SSI). This is a bounded policy field because a disability claim moves through federal SSA offices, federally funded state Disability Determination Services (DDS) agencies, medical providers, and multiple levels of administrative and judicial review.
+
+- **What is needed?**
+
+  - The Social Security Act, SSA regulations and operating manuals, current SSA organization materials, budget documents, government oversight reports, and the Sourcebook and its appendix
+
+  - A list of institutions involved in intake, medical determination, quality review, appeals, funding, and oversight
+
+  - Data on processing time, staffing, caseloads, decisional accuracy, claimant characteristics, and geographic variation where available
+
+- **Who is needed?**
+
+  - SSA field-office and disability-policy staff
+
+  - State DDS administrators, disability examiners, medical consultants, and psychological consultants
+
+  - Claimants, family members, appointed representatives, legal-aid organizations, medical providers, and disability advocates
+
+  - Congressional, GAO, SSA Office of the Inspector General (OIG), Social Security Advisory Board (SSAB), and federal-court actors
+
+- **How long will this take?**
+
+  - One hour for the initial institutional map
+
+  - Additional time to validate each relationship and compare implementation across selected states or jurisdictions
+
+**Activity**
+
+- **Step 1: Program or policy to be focused on in this exercise**
+
+  - SSA disability determination for SSDI and SSI claims
+
+  - The [SSA disability determination process](https://www.ssa.gov/disability/determination.htm) begins in local SSA field offices, which check non-medical eligibility, and then moves to state DDS agencies, which develop medical evidence and make initial medical determinations under federal standards.
+
+  - The Sourcebook classifies SSA as a large, single-headed independent administration outside an executive department. It records SSA's six-year Commissioner term, statutory independence, personnel rules, budget submission process, adjudicatory authority, and advisory-board structure as a historical baseline [@sourcebook, pp. 34, 48--52, and Appendix pp. 566--568].
+
+  - The policy-field boundary is changing. In March 2026, SSA announced that medical continuing disability reviews would move from state DDS agencies to the federal Disability Case Review organization, while DDS agencies would continue concentrating on initial claims and reconsiderations ([SSA, 2026](https://www.ssa.gov/news/en/press/releases/2026-03-12.html)).
+
+  - **Federal institutions**
+
+    - Congress, especially the House Ways and Means Subcommittee on Social Security and the Senate Finance Committee
+
+    - The President and the Office of Management and Budget (OMB)
+
+    - SSA Commissioner and central-office components responsible for disability policy, operations, finance, information technology, and quality review
+
+    - SSA regional offices, field offices, teleservice centers, and processing centers
+
+    - SSA Office of Hearings Operations (OHO), administrative law judges (ALJs), and the Appeals Council
+
+    - SSA OIG, SSAB, GAO, and federal courts
+
+  - **State and local institutions**
+
+    - State DDS agencies that make initial disability determinations and reconsideration decisions under SSA rules
+
+    - State vocational-rehabilitation agencies
+
+    - State Medicaid and human-services agencies that interact with SSI applicants and beneficiaries
+
+    - State medical-licensing boards and procurement offices that affect DDS hiring and consultative-examination contracts
+
+    - Local public hospitals, clinics, homeless-service systems, and county human-service offices that provide records or help claimants navigate applications
+
+  - **Private and nonprofit institutions**
+
+    - Claimants, families, caregivers, attorneys, and non-attorney representatives
+
+    - Treating physicians, hospitals, psychologists, and other medical sources
+
+    - Consultative-examination providers under contract with DDS agencies
+
+    - Legal-aid providers, disability-rights organizations, veterans' organizations, and community-based service providers
+
+    - Employers and vocational experts who provide information about work history and job requirements
+
+- **Step 2: Interests, power, and administrative authority**
+
+  - **Which organizations have a real interest in this policy/program?**
+
+    - **Claimants and families:** timely and accurate eligibility decisions, accessible procedures, adequate notice, privacy, and meaningful appeal rights
+
+    - **SSA field offices:** accurate intake and non-medical eligibility development, manageable caseloads, and timely transfers to DDS agencies
+
+    - **State DDS agencies:** sufficient federal funding, staff retention, manageable federal performance standards, and flexibility in day-to-day administration
+
+    - **Medical providers and consultative examiners:** clear evidence requests, timely payment, professional standards, and manageable reporting requirements
+
+    - **Representatives and legal-aid organizations:** access to records, understandable notices, fair hearings, and protection of claimant due-process rights
+
+    - **Congress and oversight institutions:** program integrity, uniform administration, timely service, budget stewardship, and evidence about implementation failures
+
+  - **Which organizations have power to make change related to it?**
+
+    - **Congress:** changes statutory eligibility rules, appropriates SSA's administrative funding, and conducts oversight; the Senate confirms the Commissioner
+
+    - **SSA Commissioner and central offices:** issue regulations and written guidance, allocate administrative resources, set DDS performance standards, oversee quality review, and reorganize federal operations
+
+    - **OMB and the President:** shape the agency budget request, management priorities, regulatory review, and leadership
+
+    - **State DDS agencies:** control day-to-day staffing, evidence development, examiner workflow, and initial case decisions within federal standards
+
+    - **Federal courts:** review final SSA decisions and can require SSA to change how law or procedure is applied
+
+    - **Medical providers:** control much of the evidence needed to evaluate impairments; missing or delayed records can slow or weaken a claim
+
+    - **Claimants, representatives, and advocacy organizations:** shape the evidence, appeal adverse decisions, litigate, testify, and draw political attention to administrative burdens
+
+    - **GAO, SSA OIG, and SSAB:** produce audits, evaluations, and recommendations that can alter congressional and agency priorities
+
+  - **Where does administrative authority lie?**
+
+    - **Congress:** creates the legal authority and program boundaries through the Social Security Act
+
+    - **SSA Commissioner:** holds general administrative authority over SSA and state-administered disability functions directed by SSA. The agency's current organizational manual places federal program and state-administered responsibilities under the Commissioner's supervision ([SSA Organizational Manual](https://www.ssa.gov/org/orgOC.htm)).
+
+    - **SSA disability and operations components:** translate statutes and regulations into program rules, field-office procedures, quality review, information systems, and national performance management
+
+    - **State DDS agencies:** make initial medical determinations under [42 U.S.C. § 421](https://uscode.house.gov/view.xhtml?req=%28title%3A42+section%3A421+edition%3Aprelim%29), but must follow SSA regulations, written guidance, fiscal controls, and performance standards
+
+    - **SSA OHO and Appeals Council:** exercise adjudicatory authority after an unfavorable determination. ALJs conduct de novo hearings, and the Appeals Council is the final level of administrative review ([SSA Hearings and Appeals](https://www.ssa.gov/appeals/about_us.html)).
+
+    - **Federal courts:** exercise judicial review after the claimant exhausts the administrative process
+
+    - The central delegation tension is that SSA finances and regulates the disability determination function, while states manage DDS personnel and daily operations. SSA's current performance policy states that the agency supplies standards, funding, monitoring, and corrective action, while each state remains responsible for day-to-day management ([SSA POMS DI 39557.001](https://secure.ssa.gov/poms.nsf/lnx/0439557001)).
+
+- **Step 3: Laws, policy tools, and implementation resources**
+
+  - **What are the important national, state or local laws establishing the policy or authorizing public funding?**
+
+    - **Social Security Act, Title II:** establishes SSDI and defines disability and insured-status requirements
+
+    - **Social Security Act, Title XVI:** establishes SSI for eligible aged, blind, and disabled people with limited income and resources
+
+    - **Section 205, 42 U.S.C. § 405:** authorizes administrative hearings and judicial review
+
+    - **Section 221, 42 U.S.C. § 421:** authorizes state DDS agencies to make disability determinations under federal standards and provides federal funding and oversight
+
+    - **Sections 701--704, 42 U.S.C. §§ 901--904:** establish SSA as an independent agency, define Commissioner leadership, and provide administrative authorities
+
+    - **20 C.F.R. Parts 404 and 416:** provide detailed SSDI and SSI eligibility, medical-evidence, determination, and appeal rules
+
+    - **State personnel, procurement, budgeting, and professional-licensing laws:** shape how each DDS hires examiners and consultants, purchases consultative examinations, and manages offices; however, the substantive disability standard remains federal
+
+  - **What policy tools are in use?**
+
+    - **Cash entitlement:** SSDI and SSI benefits provide income support after statutory eligibility is established
+
+    - **Federal-state administrative delegation:** state DDS agencies perform initial medical determinations, but SSA defines the rules and retains oversight authority
+
+    - **Federal funding:** SSA pays necessary DDS administrative expenses within approved state budgets. Its FY 2026 budget materials explain that administrative appropriations fund federal SSA staff, state DDS employees, field-office rent, telephone service, and information technology ([SSA Budget](https://www.ssa.gov/budget/?tab=1)).
+
+    - **Regulations and written guidance:** the Code of Federal Regulations, Social Security Rulings, Program Operations Manual System (POMS), Hearings, Appeals, and Litigation Law Manual (HALLEX), and medical Listings standardize decisions
+
+    - **Performance management:** SSA monitors DDS accuracy, processing time, pending and aged cases, staffing, productivity, and fiscal administration
+
+    - **Quality review:** SSA's Office of Quality Review samples DDS determinations before effectuation and can return deficient cases for correction ([SSA POMS DI 81020.135](https://secure.ssa.gov/apps10/POMS.NSF/lnx/0481020135)).
+
+    - **Contracts and purchased evidence:** DDS agencies may purchase consultative examinations when existing medical evidence is insufficient
+
+    - **Administrative adjudication and judicial review:** reconsideration, ALJ hearings, Appeals Council review, and federal-court litigation provide layered error correction
+
+    - **Oversight and appropriations:** congressional hearings, GAO evaluations, OIG audits, and annual budget decisions influence capacity and implementation priorities
+
+  - **What are other significant implementation resources to support implementation activities?**
+
+    - Trained disability examiners, medical and psychological consultants, field-office claims specialists, ALJs, appeals staff, and quality reviewers
+
+    - Claimant medical records, work histories, consultative examinations, and testimony
+
+    - POMS, HALLEX, Social Security Rulings, medical Listings, vocational rules, staff training, and policy interpretations
+
+    - Electronic case files, Electronic Records Express, online applications and appeals, and data exchanges with medical and government institutions
+
+    - SSA administrative and statistical data, state DDS performance data, congressional testimony, GAO reports, SSA OIG audits, and SSAB research
+
+    - Legal-aid organizations, appointed representatives, disability advocates, health-care systems, and community organizations that help claimants navigate administrative burdens
+
+    - Current oversight evidence is important because capacity differs across places. GAO reports that DDS offices experienced high post-pandemic attrition and that initial-claim processing averaged 231 days in FY 2024 ([GAO-26-107645](https://files.gao.gov/reports/GAO-26-107645/index.html)).
+
+- **Step 4 (Optional): Categories for the policy field**
+
+  - **Legal authority:** Congress, SSA Commissioner, state DDS agencies, OHO, Appeals Council, and federal courts
+
+  - **Funding and management:** Congress, OMB, SSA finance and operations components, state DDS parent agencies, and consultative-examination vendors
+
+  - **Service delivery:** SSA field offices, teleservice and processing centers, state DDS offices, medical providers, and claimant representatives
+
+  - **Oversight and learning:** SSA quality review, SSA OIG, GAO, SSAB, congressional committees, courts, researchers, and advocacy organizations
+
+### Policy Field Visual Diagram
+
+A visual diagram clarifies where authority, money, evidence, and claim-processing responsibilities move across the SSA disability policy field.
+
+- **What is needed?**
+
+  - Results from the policy field audit
+
+  - A node list identifying sector and level of authority
+
+  - An edge list identifying legal accountability, funding and management, service or case flow, and evidence or advice
+
+- **Who is needed?**
+
+  - SSA and DDS personnel who can validate the formal process
+
+  - Claimants and representatives who can identify informal burdens and missing relationships
+
+- **How long will this take?**
+
+  - One hour for a first diagram
+
+  - Additional validation after comparing the diagram with statutes, manuals, and practitioner experience
+
+**Activity**
+
+- **Step 1: Institutions and relationships**
+
+  - **Federal oversight level:** Congress, President and OMB, federal courts, GAO, SSA OIG, and SSAB
+
+  - **Federal administrative level:** SSA Commissioner and central offices, OHO, and Appeals Council
+
+  - **Operational and state level:** SSA field offices, state DDS agencies, and medical or consultative-examination providers
+
+  - **Public-facing level:** claimants, families, caregivers, and appointed representatives
+
+  - **Funding and management ties:** Congress and OMB to SSA; SSA to state DDS agencies; DDS agencies to consultative-examination providers
+
+  - **Legal-accountability ties:** Congress to SSA; SSA to DDS agencies; Appeals Council and federal courts to administrative decisions
+
+  - **Service and case-flow ties:** claimants to field offices; field offices to DDS agencies; DDS agencies to claimants; claimants to OHO and Appeals Council
+
+  - **Evidence and advice ties:** medical providers to DDS agencies; claimants and representatives to adjudicators; GAO, SSA OIG, and SSAB to SSA and Congress
+
+- **Step 2: Visual representation**
+
+  - Horizontal layers represent federal oversight, federal administration, operational or state implementation, and the public-facing level.
+
+  - Node colors distinguish federal oversight institutions, SSA components, state partners, and non-governmental actors.
+
+  - Darker borders indicate institutions with greater formal administrative or review authority.
+
+  - Line colors distinguish funding and management, legal accountability, service or case flow, and evidence or advice.
+
+```{r ssa-policy-field-visual, echo=FALSE, fig.cap="SSA Disability Determination Policy Field", fig.pos="H", fig.align="center", fig.width=9, fig.height=7.5, out.width="100%"}
+ssa_policy_nodes <- tibble::tribble(
+  ~node,           ~label,                                      ~x,  ~y, ~sector,               ~authority,
+  "congress",      "Congress",                                  1.6, 4,  "Federal oversight",   "High",
+  "president_omb", "President\nand OMB",                        3,   4,  "Federal oversight",   "High",
+  "courts",        "Federal\ncourts",                           5,   4,  "Federal oversight",   "High",
+  "watchdogs",     "GAO, SSA OIG,\nand SSAB",                   1.6, 3,  "Federal oversight",   "Review",
+  "ssa",           "SSA Commissioner\nand central offices",     3,   3,  "SSA component",       "High",
+  "appeals",       "OHO and\nAppeals Council",                  5,   3,  "SSA component",       "High",
+  "field",         "SSA field\noffices",                        1.6, 2,  "SSA component",       "Operational",
+  "dds",           "State DDS\nagencies",                       3,   2,  "State partner",       "High",
+  "medical",       "Medical providers\nand CE vendors",         5,   2,  "Non-governmental",    "Operational",
+  "claimants",     "Claimants, families,\nand representatives",  3,   1,  "Non-governmental",    "Operational"
+)
+
+ssa_policy_edges <- tibble::tribble(
+  ~from,            ~to,          ~relation,
+  "congress",       "ssa",        "Legal accountability",
+  "president_omb",  "ssa",        "Funding and management",
+  "courts",         "appeals",    "Legal accountability",
+  "watchdogs",      "congress",   "Evidence and advice",
+  "watchdogs",      "ssa",        "Evidence and advice",
+  "ssa",            "field",      "Funding and management",
+  "ssa",            "dds",        "Legal accountability",
+  "ssa",            "appeals",    "Funding and management",
+  "field",          "dds",        "Service and case flow",
+  "dds",            "medical",    "Funding and management",
+  "medical",        "dds",        "Evidence and advice",
+  "claimants",      "field",      "Service and case flow",
+  "dds",            "claimants",  "Service and case flow",
+  "claimants",      "appeals",    "Service and case flow",
+  "claimants",      "congress",   "Evidence and advice"
+) %>%
+  left_join(
+    ssa_policy_nodes %>% select(from = node, x_from = x, y_from = y),
+    by = "from"
+  ) %>%
+  left_join(
+    ssa_policy_nodes %>% select(to = node, x_to = x, y_to = y),
+    by = "to"
+  )
+
+ggplot() +
+  geom_curve(
+    data = ssa_policy_edges,
+    aes(
+      x = x_from,
+      y = y_from,
+      xend = x_to,
+      yend = y_to,
+      color = relation
+    ),
+    curvature = 0.08,
+    linewidth = 0.7,
+    alpha = 0.75,
+    arrow = grid::arrow(type = "closed", length = grid::unit(0.08, "in"))
+  ) +
+  geom_label(
+    data = ssa_policy_nodes %>% filter(authority != "High"),
+    aes(x = x, y = y, label = label, fill = sector),
+    color = "black",
+    linewidth = 0.5,
+    size = 3.1,
+    label.padding = grid::unit(0.20, "lines")
+  ) +
+  geom_label(
+    data = ssa_policy_nodes %>% filter(authority == "High"),
+    aes(x = x, y = y, label = label, fill = sector),
+    color = "black",
+    linewidth = 1.1,
+    size = 3.1,
+    label.padding = grid::unit(0.20, "lines")
+  ) +
+  annotate("text", x = 0.9, y = 4, label = "Federal oversight", hjust = 1, fontface = "italic", size = 3.2) +
+  annotate("text", x = 0.9, y = 3, label = "Federal administration", hjust = 1, fontface = "italic", size = 3.2) +
+  annotate("text", x = 0.9, y = 2, label = "Operations and states", hjust = 1, fontface = "italic", size = 3.2) +
+  annotate("text", x = 0.9, y = 1, label = "Public-facing level", hjust = 1, fontface = "italic", size = 3.2) +
+  scale_color_manual(
+    values = c(
+      "Funding and management" = "#D55E00",
+      "Legal accountability" = "#0072B2",
+      "Service and case flow" = "#009E73",
+      "Evidence and advice" = "#CC79A7"
+    )
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Federal oversight" = "#BDD7EE",
+      "SSA component" = "#C6E0B4",
+      "State partner" = "#F8CBAD",
+      "Non-governmental" = "#D9D9D9"
+    )
+  ) +
+  coord_equal(xlim = c(0.1, 5.7), ylim = c(0.65, 4.35), clip = "off") +
+  labs(color = "Relationship", fill = "Institution type") +
+  theme_void(base_size = 11) +
+  theme(
+    legend.position = "bottom",
+    legend.box = "vertical",
+    legend.title = element_text(face = "bold"),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+```
+
+
+\newpage
