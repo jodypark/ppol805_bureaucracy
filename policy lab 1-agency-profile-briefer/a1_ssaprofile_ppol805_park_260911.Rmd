@@ -305,7 +305,7 @@ knitr::kable(brief_stakeholders, format = "latex", booktabs = TRUE,
 
 **Policy Field Visual Diagram**
 
-The visual worksheet uses the audit's actor list and a directed list of relationships. I would allow about one hour for a first diagram, followed by source checks. SSA and DDS personnel could validate formal procedures; claimants and representatives could identify missing relationships and burdens. This is a proposed validation step.
+The visual worksheet uses the audit's actor list and a directed list of relationships. SSA and DDS personnel could validate formal procedures; claimants and representatives could identify missing relationships and burdens. This is a proposed validation step.
 
 Figure \@ref(fig:ssa-policy-network) groups actors across oversight, federal administration, operations, and the public-facing level. Node colors identify institution type. Arrow colors distinguish funding and authority, legal review, service or case flow, and evidence or advice. Dashed lines also distinguish advice and review. Borders are uniform because formal powers are described in the stakeholder table rather than scored on a single authority scale. Figure \@ref(fig:ssa-field) separately shows the claim and appeal sequence. Neither diagram depicts the announced continuing-review transition.
 
