@@ -4,7 +4,7 @@ title: |
 subtitle: |
  PPOL805: Bureaucracy - Policy Lab 1 \vspace{0.2cm}
 author: "Jody Park"
-date: "`r Sys.Date()`"
+date: "2026-09-13"
 output:
   bookdown::pdf_document2:
     toc: false
@@ -439,6 +439,23 @@ brief_map(brief_field_nodes, brief_field_edges, brief_field_labels,
 \par\endgroup
 
 The next research step is to compare administrative conditions across selected jurisdictions and identify how witnesses describe them in congressional hearings. Linking those exchanges to later performance requires dated records and an assessment of alternative explanations.
+
+\newpage
+
+**AI Collaboration Statement**
+
+I used ClaudeCode and ChatGPT for these tasks:
+
+- Set up the rmd file
+
+- Fix LaTex errors
+
+- Match and verify relevant SSA statutes with my writing
+
+- Write codes for the figures 
+
+- Proofread all sections and check grammar issues 
+
 
 \newpage
 
