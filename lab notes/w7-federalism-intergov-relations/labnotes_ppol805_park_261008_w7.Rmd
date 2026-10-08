@@ -1,0 +1,470 @@
+---
+title: |
+  \large \textbf{Lab Notebook - Week 7} 
+subtitle: |
+ Federalism \& Intergovernmental Relations \vspace{0.2cm}
+author: "Jody Park"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+    latex_engine: xelatex
+colorlinks: true
+urlcolor: blue
+linkcolor: blue
+fontsize: 11pt
+bibliography: "references.bib"
+csl: "apanodoi.csl"
+link-citations: true
+reference-section-title: References
+header-includes:
+  - \usepackage[capposition=top]{floatrow}
+  - \usepackage{placeins}   
+  - \usepackage{dcolumn}
+  - \usepackage{booktabs}
+  - \usepackage{siunitx}
+  - \usepackage{amsmath}
+  - \usepackage{enumerate}
+  - \usepackage[shortlabels]{enumitem}
+  - \usepackage[hang,flushmargin]{footmisc}	
+  - \usepackage{makecell}
+  - \usepackage{url}
+  - \usepackage{longtable}
+  - \usepackage{graphicx}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{xcolor}
+  - \usepackage[most]{tcolorbox}
+  - \newtcolorbox{qbox}{enhanced,breakable,boxrule=0.5pt,arc=2mm,
+    colback=gray!10,colframe=black!50,left=6pt,right=6pt,top=6pt,bottom=6pt}
+  - \usepackage{fontspec}
+  - \usepackage[margin=1in]{geometry}
+  - \usepackage{titling}
+  - \setlength{\droptitle}{-1in}
+  - \usepackage{setspace}
+  - \setstretch{1.2} 
+---
+
+```{r setup, include = FALSE, message=FALSE, results=FALSE, echo = FALSE}
+# R libraries
+# data manipulation
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(haven)
+library(readr)
+library(caret)
+library(modelr)
+library(broom)
+library(ggplot2)
+library(plotly)
+library(png)
+library(openxlsx) 
+library(kableExtra)
+library(patchwork)
+library(texreg)
+library(estimatr)
+library(MASS) 
+library(Matrix)
+library(sandwich)   # vcovHC
+library(lmtest)     # coeftest
+library(boot)       # bootstrap
+library(conflicted)
+library(car)
+library(cowplot)
+library(AER)
+library(MatchIt)
+library(labelled)
+
+conflict_prefer("filter", "dplyr")
+conflict_prefer("select", "dplyr")
+
+# For figures
+knitr::opts_chunk$set(
+                      fig.width = 9, fig.height = 7, fig.retina = 3,
+                      out.width = "100%",
+                      cache = FALSE,
+                      echo = TRUE,
+                      message = FALSE, 
+                      warning = FALSE,
+                      hiline = TRUE
+                      )
+options(tinytex.verbose = TRUE)
+
+knitr::knit_hooks$set(plot = function (x, options) {
+  float_correct <- function(f, y, opts)  {
+    if (is.null(opts$regfloat) || opts$regfloat==FALSE)
+      paste0(f(y, opts), "\n\n\\FloatBarrier\n")
+    else
+      f(y, opts)
+  }
+  if (!is.null(options$out.width) || !is.null(options$out.height) ||
+      !is.null(options$out.extra) || options$fig.align != "default" ||
+      !is.null(options$fig.subcap)) {
+    if (is.null(options$fig.scap))
+      options$fig.scap = NA
+    return(float_correct(knitr:::hook_plot_tex, x, options))
+  }
+  return(float_correct(knitr:::hook_plot_md_base, x, options))
+})
+
+```
+
+# Goals for this week's lab notebook
+
+- Write down my thoughts on the readings
+
+- Continue working on my policy lab 2 report
+
+\bigskip
+
+# Week 7 Reading Notes \& Questions
+
+## Pam's plan for the class
+
+Hi 805-folk!
+
+Welcome to Week 7.  Here are the links for this week's readings, in case you couldn't find them on the library website:
+
+- [Michener Ch. 1 and 8](https://ezaccess.libraries.psu.edu/login?url=https://doi.org/10.1017/9781108224987)
+
+- [Thompson](https://doi-org.ezaccess.libraries.psu.edu/10.1177/0275074012461561)
+
+- [Metzger](https://link.gale.com/apps/doc/A187494304/LT?u=carl39591&sid=summon&xid=1a3c10aa)
+
+We will spend some time working on your Lab 2 projects as well as planning ahead for the second half of the semester, so come prepared to dig in.  
+
+I will begin including example lab book entries in Modules/Lab_Book.  As you fill yours in this week and look through the past 5 weeks of entries, think about what is working for you and what isn't.  The lab book is not about busy work, it's a tool that will hopefully be useful as you transition into the workforce.  It should be tailored to your unique processes and needs.    
+
+Happy Reading,
+
+Pam
+
+\bigskip
+
+## Reading notes
+
+## 1. Fragmented Democracy Chapters 1 \& 8 [@michener2018]
+
+### Chapter 1. Medicaid, Political Life, and Fragmented Democracy
+
+- Anecdotes
+  - Terrie: white noise - "you have no say, no say in the process if you don't agree with what is going on in Medicaid (p.3)."; Georgia's Medicaid = headache; injustice
+  - John: had a chronic illness in early childhood; Married to Michigan Medicaid; was able to get in-network treatments only
+  - Fiona: NC's Medicaid program refused to cover care from other states for her son
+  - Daphne: mistrust of the state comes from her view on local politics
+  - These stories show the imprint of Medicaid's federated structure; "political life" $\rightarrow$ a person's experiences with democratic citizenship
+
+- Research question (p.8): "how do Americans understand and respond to a political system that confers (or withholds) access to resources for the most indigent – not on the basis of needs or rights – but on the basis of geographic location?"
+  - she investigates whether, how, and under what conditions Medicaid influences *political life*.
+
+- Findings: it has varied effects across states, counties, and neighborhoods
+  - *Federalism* produces geographically differentiated political capacity across its population of beneficiaries and federalist social policy is a key purveyor of political inequality
+
+- Why Medicaid?: it gives wide discretion across state and local levels (due to the intergov configuration of the program)
+  - the largest public health insurance source in the US
+  - a primary source for those who are living in or near poverty
+  - people of colour are disproportionately represented in Medicaid; need to look at the demographic profile of Medicaid (race, class, health)
+
+\bigskip
+
+### Chapter 8. Federalism and Political Inequality
+
+- Trump's Executive Order on the Affordable Care Act (ACA): intention - "afford the states more flexibility and control"; but no clear implementation details, and his decision has increased geographic differences in access to health care.
+
+- Existing literature: heavily focuses on federalism in relation to freedom \& states' rights; its consequences for equality are less studied
+  - political inequality matters
+  - the role of federalism in shaping access to resources and opportunities, particularly for vulnerable/politically marginalized populations
+  - federalism is a flexible institution that can be adapted to meet the needs of different communities? $\rightarrow$ still, "turnabout may begin to change some things relatively quickly, but will only slowly adjust the opportunities that have been ravaged on account of decades of destructive state and local practices underwritten by federalism." (p.166)
+  - I like the way she linked the existing literature to her point, and also how she presented the research gaps in the field; very compelling 
+
+- Takeaway: federalism erodes the political capacity of social policy beneficiaries in particular locales
+  - she defined "citizens" as members of the political community, regardless of legal status
+
+\bigskip
+
+### In-class Discussions 
+
+- Democratic life 
+- Medicare: state-level programs to get it passed
+  - Waivers: used to make parts of Medicaid more expensive/restricted
+  - Medicaid: has always been diverse
+  - Affordable Care Act: States have abilities to have choices - Medicaid takes up so much of the budget 
+
+- People tied to some states (e.g., John - Michigan)
+  - Do some states act as magnets for more sick people?
+  - Policy diffusion - go low? Bolden's race-to-the-bottom paper
+
+\newpage
+
+## 2. Administrative Law as the New Federalism [@metzger2008]
+
+- Research question: examines how administrative law may be becoming the new federalism and assesses how well-adapted administrative law is to performing this role
+  - studies the relationship between federalism and administrative law
+ 
+- Administrative laws: constitutional dimensions
+
+- Federalism concerns...
+  - concerns about protecting the states' independent regulatory role retain traction
+  - the vehicle through which the Court appears to be addressing these concerns = admin law
+
+- Interesting case: Alaska Department of Environmental Conservation (ADEC) v. EPA
+  - agency interpretation of a governing statute regarding environmental matters
+  - implementation of Clean Air Act (CAA)
+  - Best Available Control Technology (BACT) requirements 
+  - Does the EPA have authority to supervise a state's BACT determinations?
+    - ADEC offers little guidance about how the Court believes federalism and admin law principles should be integrated (p.2032)
+
+- Admin law as new federalism
+  - 1. The absence of constitutional federalism curbs on Congress
+  - 2. The absence of subconstitutional federalism doctrines
+  - 3. Admin law as a federalism vehicle
+
+- Conclusion: admin law has important federalism-reinforcing features
+  - the Court's decisions to date have failed to fully develop admin law's federalism potential
+
+\bigskip
+
+### In-class Discussions 
+
+- Push-and-pull relationships
+  - how do executive agencies make choices? 
+  - the court is also making decisions
+  - states: special cases because they are co-sovereigns
+
+- Pre-emption
+
+- Which agency actor is deciding your agency's policies?
+
+\newpage
+
+## 3. The Rise of Executive Federalism: Implications for the Picket Fence and IGM [@thompson2013]
+
+- IGM: Intergovernmental management 
+  - the process of managing and coordinating between different levels of government $\rightarrow$ matters between federal and state/local governments.
+
+- Picket-fence vs executive federalism
+  - Picket-fence federalism: a model of federalism that depicts the growing number of federal grants as pickets connected by wire, symbolizing a close alliance between federal and state administrators in implementing grant programs.
+  - Executive federalism: a model of federalism where the executive branch plays a central role in managing and coordinating with state and local governments.
+
+- Research gap: "the degree to which the EF perspective captures developments with respect to grant programs has yet to be systematically assessed" (p.4)
+  - waivers have played a significant role in reshaping Medicaid
+  - highlights the degree to which waivers can appeal to presidents and top political execs as tools to reshape domestic grant programs (p.12)
+
+- Waivers
+  - Transformation via demonstration waivers
+  - Targeted waivers for home and community-based services
+
+- The rise of executive federalism (p.15)
+  - 1. EF more explicitly recognizes the asymmetrical character of the federal grant system and follows the money
+  - 2. EF underscores the vast scope of administrative discretion associated with waivers and the program transformations they can galvanize
+  - 3. EF features a much higher quotient of “the political"
+
+\bigskip
+
+### In-class Discussions 
+
+- Thompson: Federalism from the perspectives of executives
+
+- Think about whether waivers, permits, and executive decisions shape your agency's decisions.
+
+
+\newpage
+
+# In-class Exercises
+
+## Federalism 
+
+1. Structure of the government 
+
+- Our constitution: national gov and state gov
+  - vertical division of the authority: between the national and state governments
+  - within each gov: horizontal separation of the powers (legislative, executive, judicial)
+
+- Federal republic: elect representatives
+  - vertical: between different levels of government, such as federal, state, and local; residents elect officials at each level
+  - horizontal: within a state gov, residents separately elect their governors and state legislatures, upper/lower chambers (bc some states don't call them the Senate and House of Representatives)
+  - dual division of authority protects the citizens: Madison's "double security" for the rights of the people (Federalist No. 51)
+
+\bigskip
+
+2. The way of governing
+
+- The readings this week
+- Independent from the national gov
+- How that works in terms of intergovernmental relations
+
+\newpage
+
+## USAspending.gov
+
+- Explore the data $\rightarrow$ Agency or Agency Profile
+
+- [SSA's agency profile](https://www.usaspending.gov/agency/social-security-administration?fy=2026)
+  - SSA: SSA Office of Financial Policy (283227); SSA OFC OF ACQUISITION GRANTS (283213)
+  - Search by award and transaction $\rightarrow$ filter by keyword and enter those two
+
+\newpage
+
+## Policy Lab 2: Intergovernmental Relations
+
+- Review the rubric
+  - Contact Pam to discuss how I'll work on this project
+
+- **Purpose**: Federal agencies rarely operate alone. Policies are implemented through complex relationships with state, local, tribal, and territorial governments (SLTTGs). 
+  - In this lab, you will investigate how your existing agency/project functions within American federalism and how those relationships shape implementation, accountability, equity, and policy outcomes. 
+  - Central analytical move: Go beyond describing who does what. Explain how intergovernmental design affects what actually happens—and why outcomes vary across jurisdictions.
+
+- 3 jurisdictions
+  - Money: USAspending
+  - Regulations: how does the agency work for the localities?
+  - Differences across the jurisdictions
+
+- Explain similarities or variations 
+
+- Research tools:
+  - Regulatory insights
+  - Legislative insights
+  - Congressional insights 
+  - GAO
+  - OMB
+
+- Visualization is important! 
+
+- Federalism and intergov footprints
+
+- agency *congressional justification report*
+
+- Citations: every claim you make needs to have supporting documents (make sure to put in-text citations and a reference list)
+
+- Presentation: Toastmasters-style is always helpful to develop presentation skills
+  - If I can't make the class - do a Zoom recording 
+
+- Next week: readings - gov reports 
+  - focus more on policy lab 2 
+
+
+\bigskip
+
+
+### What I proposed for Policy Lab 2
+
+For Policy Lab 2, I will focus on SSA’s intergovernmental relationships by examining the distribution of field offices, budgets, programs, personnel, expertise, and clients across localities, states, tribes, and territories. 
+Moreover, I will examine congressional oversight of SSA and consider how the agency’s intergovernmental relationships may shape the implementation information that bureaucrats provide to Congress. 
+This analysis will include recent and recurring issues in the SSA context. 
+Examples include the DOGE data-access controversy and related congressional responses, H.Res. 195, a resolution of inquiry concerning DOGE’s access to SSA systems, and H.R. 1877, the Protecting Americans’ Social Security Data Act, as well as outward-facing data sharing through System of Records Notices (SORNs) and recurring delays in data-sharing agreements between SSA and
+the Congressional Budget Office (CBO), documented in the House Budget Committee’s discussion of the CBO Data Sharing Act.
+
+To meet the assignment without trying to cover every jurisdiction, I will compare at least three contrasting states or jurisdictions. 
+I will examine field-office availability, staffing and budgets where data are available, beneficiary or claimant populations, and the federal–state Disability Determination Services arrangement.
+I will then identify statutes, administrative mechanisms, political variation, and disputes that help explain cross-jurisdictional differences. Tribal and territorial relationships will be incorporated where the evidence supports a valid comparison rather than treated as interchangeable with states.
+This assignment will show variations in implementation capacity and administrative burden, which change the information local implementers, SSA officials, and members of Congress need and contest.
+
+\bigskip
+
+- Pam: how is the law written $\rightarrow$ who decides which offices close or open 
+  - statutes
+  - hearings... what did people say?
+  - I can use my SSA FO closing descriptives
+
+\bigskip
+
+### Policy Lab 2 Layout Updates 
+
+- **Executive Summary**: State the intergovernmental problem, central finding, major variation, and implications.
+
+- **Agency Overview**: Orient the reader using work already completed; revise this section using Lab #1 feedback.
+
+- **Intergovernmental Structure**: Explain authority, funding, implementation, discretion, oversight, and key legal/policy mechanisms.
+
+- **Jurisdictional Comparison**: Compare at least three jurisdictions; identify meaningful differences and explain why they occur.
+
+- **Politics and Conflict**: Analyze bargaining, resistance, litigation, partisan or institutional conflict, and other relevant dynamics.
+
+- **Evaluation of Effectiveness**: Use evidence to assess how well the arrangement is working and for whom; distinguish spending/implementation evidence from outcome evidence.
+
+- **Conclusions**: Return to the central question: what does the federalism design help explain about implementation and outcomes?
+
+Your Starting Point: Extend the Diagram You Already Have
+
+Open your team’s existing policy field diagram. Expand or add an intergovernmental layer that makes visible:
+- Authority: federal, state, local, tribal, or territorial legal authority
+- Money: grants, transfers, contracts, reimbursements, or other resource flows
+- Implementation: who actually administers, delivers, regulates, or enforces
+- Discretion: where actors can interpret, adapt, prioritize, or decline
+- Oversight: who monitors, audits, conditions, sanctions, or reviews whom
+- Politics: where bargaining, resistance, conflict, or coalition-building occurs
+- Variation: where institutional design creates opportunities for jurisdictions to diverge
+- Analytical test: A reader should be able to use the diagram to see relationships, flows, decision points, and sources of variation—not merely a list of organizations.
+
+\bigskip
+
+### Apply the Rubric to My SSA Case (Needs to be updated)
+
+- **Executive Summary**: State the intergovernmental problem, central finding, major variation, and implications.
+
+  - Intergovernmental problem: the proliferation of unequal access to SSA field offices and their services across different jurisdictions (state/county level)
+  
+  - Sources I've got:
+    - 1. Research Report - ProQuest Legislative Insight ('/Users/jodypark/Library/CloudStorage/Dropbox/github/ppol805_bureaucracy/lab notes/w5-admin-decision-making/labnotes_ppol805_park_260924_w5.pdf')
+    - 1.1 '/Users/jodypark/Library/CloudStorage/Dropbox/github/ppol805_bureaucracy/lab notes/w5-admin-decision-making/PL96265_legislative_history.pdf'
+    - 1.2 '/Users/jodypark/Library/CloudStorage/Dropbox/github/ppol805_bureaucracy/lab notes/w5-admin-decision-making/PL96265_public_law_full_text.pdf'
+    - 1.3 '/Users/jodypark/Library/CloudStorage/Dropbox/github/ppol805_bureaucracy/lab notes/w5-admin-decision-making/PL98460_legislative_history.pdf'
+    - 1.4 '/Users/jodypark/Library/CloudStorage/Dropbox/github/ppol805_bureaucracy/lab notes/w5-admin-decision-making/PL98460_public_law_full_text.pdf'
+
+    - 2. SSA Field Office Data \& Visualizations
+    - 2.1 Visualizations (figures and tables): '/Users/jodypark/Library/CloudStorage/Dropbox/SSA Accessibility/visualization'
+    - 2.2 Writing: '/Users/jodypark/Library/CloudStorage/Dropbox/SSA Accessibility/writing/manuscript/park_research_design_260911.pdf'
+
+    - 3. Policy Lab 1
+    - 3.1 '/Users/jodypark/Library/CloudStorage/Dropbox/github/ppol805_bureaucracy/policy lab 1-agency-profile-briefer/a1_ssaprofile_ppol805_park_260911.pdf'
+
+    - 4. Course readings
+    - '/Users/jodypark/Library/CloudStorage/Dropbox/Penn State/2026 Fall/PPOL805 Bureaucracy/readings'
+
+    - 5. Lab #1 Feedback
+    - Pamela J Clouser McCann Sep 18 at 12:14pm: for some reason Canvas can't find your briefer like it did for the other groups!  I'm copying my comments here...overall -- really nicely done.
+    w.r.t. your RQ -- I highlighted your "How" and said: under what conditions? …do you want to ask a “how” question…or a conditional one?  how is often quite descriptive (not a bad thing)…whereas under what conditions offers you a chance to think about the logic under which you think one thing versus another matters.
+    then in your methods, particularly re: LLMs:  using an in-depth case (i.e., SSA) can help you assess what may be missed in a larger set…also to help you set up the design of a text analysis and other such as LLM approaches. You can also use it to hand code what you think you would be looking for 
+    
+    - Jody Park Sep 18 at 1:14pm Thank you so much for your comments! I always feel grateful for having comments on my assignments. I wanted to go for a conditional one for the RQ, but it wasn't 100% clear to me when working on the agency profile. I think policy lab #2 and the datasets you taught us yesterday would definitely help me narrow down my RQ and my overall empirical strategy. I'm excited to dig into the ProQuest ones and come up with some fun methods/RQ ideas! I'll keep you updated.
+
+    - 6. Policy Lab 2 Rubric 
+    - '/Users/jodypark/Library/CloudStorage/Dropbox/github/ppol805_bureaucracy/policy lab 2-intergovernmental-footprint/lab2_explainer_rubric.docx'
+
+    - 7. Syllabus
+    - '/Users/jodypark/Library/CloudStorage/Dropbox/Penn State/2026 Fall/PPOL805 Bureaucracy/PPOL_805.pdf'
+
+    - 8. Relevant journal articles:
+    - 8.1. in Bureaucracy folder in my Zotero: /Users/jodypark/Library/CloudStorage/Dropbox/Zotero
+    - 8.2. SSA papers: '/Users/jodypark/Library/CloudStorage/Dropbox/SSA Accessibility/paper'
+
+- **Agency Overview**: Orient the reader using work already completed; revise this section using Lab #1 feedback.
+
+  - Summarize and revise the agency overview part from the policy lab 1 paper
+
+- **Intergovernmental Structure**: Explain authority, funding, implementation, discretion, oversight, and key legal/policy mechanisms.
+  - authority: policy lab 1
+  - funding: can look up SSA's congressional justification reports (the most recent 5 years?) or relevant GAO reports; USAspending.gov; congressional budget report; SSA annual reports
+  - implementation: policy lab 1
+  - discretion: policy lab 1
+  - oversight: policy lab 1; journal articles
+  - key legal/policy mechanisms: policy lab 1
+
+- **Jurisdictional Comparison**: Compare at least three jurisdictions; identify meaningful differences and explain why they occur.
+
+- **Politics and Conflict**: Analyze bargaining, resistance, litigation, partisan or institutional conflict, and other relevant dynamics.
+
+- **Evaluation of Effectiveness**: Use evidence to assess how well the arrangement is working and for whom; distinguish spending/implementation evidence from outcome evidence.
+
+- **Conclusions**: Return to the central question: what does the federalism design help explain about implementation and outcomes?
+
+\newpage
