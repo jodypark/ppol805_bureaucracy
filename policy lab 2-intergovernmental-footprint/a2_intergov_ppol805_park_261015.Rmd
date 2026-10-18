@@ -1,0 +1,993 @@
+---
+title: |
+  \large \textbf{Intergovernmental Footprint: Social Security Administration (SSA)} 
+subtitle: |
+ PPOL805: Bureaucracy - Policy Lab 2 \vspace{0.2cm}
+author: "Jody Park"
+date: "2026-10-18"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+    latex_engine: xelatex
+colorlinks: true
+urlcolor: blue
+linkcolor: blue
+fontsize: 11pt
+bibliography: "references.bib"
+csl: "apanodoi.csl"
+link-citations: true
+reference-section-title: References
+header-includes:
+  - \usepackage[capposition=top]{floatrow}
+  - \usepackage{placeins}   
+  - \usepackage{dcolumn}
+  - \usepackage{booktabs}
+  - \usepackage{tabularx}
+  - \usepackage{siunitx}
+  - \usepackage{amsmath}
+  - \usepackage{enumerate}
+  - \usepackage[shortlabels]{enumitem}
+  - \usepackage[hang,flushmargin]{footmisc}	
+  - \usepackage{makecell}
+  - \usepackage{url}
+  - \usepackage{longtable}
+  - \usepackage{graphicx}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{xcolor}
+  - \usepackage[most]{tcolorbox}
+  - \newtcolorbox{qbox}{enhanced,breakable,boxrule=0.5pt,arc=2mm,
+    colback=gray!10,colframe=black!50,left=6pt,right=6pt,top=6pt,bottom=6pt}
+  - \usepackage{fontspec}
+  - \usepackage[margin=1in]{geometry}
+  - \usepackage{titling}
+  - \setlength{\droptitle}{-1in}
+  - \usepackage{setspace}
+  - \setstretch{1.0} 
+---
+
+```{r setup, include=FALSE}
+# load libraries and retain lab 1 output defaults
+library(tidyverse)
+library(kableExtra)
+knitr::opts_chunk$set(fig.width = 9, fig.height = 7, fig.retina = 3, dev = "quartz_pdf",
+                      out.width = "100%", cache = FALSE, echo = FALSE,
+                      message = FALSE, warning = FALSE)
+
+# locate existing research outputs without changing source files
+asset_root <- "/Users/jodypark/Library/CloudStorage/Dropbox/SSA Accessibility/visualization"
+figure_files <- file.path(asset_root, "figure", c(
+  "f1_timing-fo-closings_260923.png", "f2_map-fo-closings_260923.png"))
+table_files <- file.path(asset_root, "table", c(
+  "t1_fo-open-close-year_260923.tex", "t7_office-count-distribution_260930.tex",
+  "t9_last-office_260930.tex", "t10_opening-relocation-checks_260930.tex"))
+fywl_path <- "/Users/jodypark/Library/CloudStorage/Dropbox/SSA Accessibility/data/ssa/state-agency-workload/SSA-SA-FYWL.csv"
+office_path <- "/Users/jodypark/Library/CloudStorage/Dropbox/SSA Accessibility/data/ssa/field-office/clean/FO-Address-Open-Close-county-year-geocode-1998-2026_clean.csv"
+stopifnot(all(file.exists(c(figure_files, table_files, fywl_path, office_path))))
+
+# print complete table fragments and replace raw knitr caption tokens
+include_table <- function(path, label, portrait = FALSE) {
+  lines <- readLines(path, warn = FALSE)
+  stopifnot(!any(grepl("\\\\documentclass|\\\\begin\\{document\\}", lines)))
+  lines <- gsub("\\(\\\\#tab:[^)]*\\)", "", lines)
+  lines <- sub("\\\\caption\\{", paste0("\\\\caption{\\\\label{tab:", label, "}"), lines)
+  lines <- gsub("\\item Note: ", "\\item[] \\textit{Note:} ", lines, fixed = TRUE)
+
+  # remove page rotation while retaining the source width-limiting resizebox
+  if (portrait) {
+    lines <- gsub("\\begin{landscape}", "", lines, fixed = TRUE)
+    lines <- gsub("\\end{landscape}", "", lines, fixed = TRUE)
+    lines <- gsub("\\begin{pdflscape}", "", lines, fixed = TRUE)
+    lines <- gsub("\\end{pdflscape}", "", lines, fixed = TRUE)
+    lines <- sub("\\\\begin\\{table\\}\\[[^]]*\\]", "\\\\begin{table}[H]", lines)
+  }
+  cat(paste(lines, collapse = "\n"), "\n")
+}
+```
+
+# 1. Executive Summary
+
+Social Security disability benefits rest on one national standard, yet a state agency makes the first medical decision on most claims. Federal law sets the rules, and the federal government pays the full cost of that work. State Disability Determination Services (DDS) hire the examiners and decide the cases [@socialsecurity2024; @fiscal2025]. The Social Security Administration (SSA) also runs field offices that sit in counties but answer to SSA, not to county governments. For Policy Lab 2, I ask under what conditions this federal–state design produces variation across states and counties in access to disability claims and in the decisions those claims receive.
+
+The central finding is that the intergovernmental design separates two sources of variation. Federal law fixes the standard and the money, so states cannot change who qualifies. States still employ the people who apply that standard, and SSA administers its field-office network. In fiscal year (FY) 2024, the initial adult favorable determination rate ranged from 29.4 percent in Kentucky to 47.0 percent in New Hampshire under the same federal rules [@ssa2026q]. New York sat near the national rate but lost 19 of its 86 field offices between 2000 and 2024, more than any other state (Table \@ref(tab:state-comparison)). Across all states, office closures were nearly uncorrelated with favorable rates (Figure \@ref(fig:state-patterns)).
+
+The intergovernmental design also shapes conflict. When SSA pushed periodic reviews through state agencies in the early 1980s, governors or agency heads in 18 states halted or held benefit terminations [@collins1985]. Congress answered in 1984 by tightening uniform standards and setting deadlines for federal takeover of noncompliant states [@socialsecurity1984]. In 2026, SSA announced that a federal unit would take over medical reviews from the states [@ssa2026l].
+
+These state and county patterns are descriptive, so they do not show that state politics or office closures caused the differences I report. Uniform rules constrain state choices. Still, staffing and office locations remain plausible sources of variation, so oversight should track both alongside decision accuracy.
+
+\newpage
+
+# 2. Agency Overview
+
+SSA administers Old-Age, Survivors, and Disability Insurance under Title II of the Social Security Act and Supplemental Security Income (SSI) under Title XVI [@socialsecurity2024]. In FY2024, SSA employed more than 58,000 federal workers in more than 1,500 offices. It also funded about 14,000 state DDS employees [@morton2025].
+
+\bigskip
+
+## 2.1 Mission and Institutional Position
+
+Social Security Disability Insurance (SSDI) is the disability component of Social Security's insurance program. SSI is a means-tested benefit for people with limited income and resources [@ssa2026p]. Both programs use the same medical definition of disability and send initial medical decisions to state DDSs [@ssa2026g; @ssa2026h].
+
+SSA is an independent agency led by a single Commissioner who serves a six-year statutory term [@socialsecurity2024]. Independence has several dimensions, and a statutory term is only one of them [@selin2015]. For this report, the more important relationship is vertical, because SSA's authority reaches claimants through state agencies it does not run.
+
+```{r agency-profile-data, include=FALSE}
+# fetch the pinned regulation with compression required by ecfr
+profile_url <- 'https://www.ecfr.gov/api/versioner/v1/full/2026-10-15/title-20.xml?part=404&subpart=Q'
+profile_response <- curl::curl_fetch_memory(profile_url,
+  handle = curl::new_handle(accept_encoding = 'gzip', timeout = 120))
+stopifnot(profile_response$status_code == 200L, length(profile_response$content) > 0L)
+profile_xml <- xml2::read_xml(profile_response$content)
+profile_sections <- xml2::xml_find_all(profile_xml, './/DIV8[@TYPE="SECTION"]')
+stopifnot(length(profile_sections) == 48L)
+
+# join section paragraphs so list continuations retain their lead-in
+profile_text <- map_chr(profile_sections, function(section) {
+  paragraphs <- xml2::xml_text(xml2::xml_find_all(section, './P'))
+  paragraphs <- str_remove(paragraphs, '^\\s*(\\([[:alnum:]]+\\)\\s*)+')
+  str_squish(paste(paragraphs, collapse = ' '))
+})
+profile_text <- str_replace_all(profile_text,
+  c('U\\.S\\.C\\.' = 'USC', 'C\\.F\\.R\\.' = 'CFR',
+    'Pub\\. L\\.' = 'Public Law', '§§?' = 'section'))
+profile_text <- str_replace_all(profile_text, '(?<=404)\\.(?=[0-9]{4})', '_')
+
+# load the pinned english model outside dropbox
+model_dir <- path.expand('~/Library/Application Support/udpipe')
+model_path <- file.path(model_dir, 'english-ewt-ud-2.5-191206.udpipe')
+if (!file.exists(model_path)) {
+  dir.create(model_dir, recursive = TRUE, showWarnings = FALSE)
+  model_download <- udpipe::udpipe_download_model(language = 'english-ewt',
+    model_dir = model_dir, udpipe_model_repo = 'jwijffels/udpipe.models.ud.2.5')
+  stopifnot(!model_download$download_failed, file.exists(model_path))
+}
+ud_model <- udpipe::udpipe_load_model(model_path)
+
+# parse sentences and grammatical dependencies within each section
+profile_tokens <- udpipe::udpipe_annotate(ud_model, x = profile_text,
+  doc_id = xml2::xml_attr(profile_sections, 'N')) %>% as_tibble() %>%
+  mutate(unit = paste(doc_id, sentence_id, sep = '_'))
+
+# retain the seven dictionaries in their first-match precedence
+profile_verbs <- list(
+  Enforcement = 'enforce, penalize, prosecute, prohibit, fine, suspend, sanction, terminate, deport, arrest, compel, levy, comply, order, withhold, adjudicate, bar',
+  Regulatory = 'approve, certify, license, prescribe, issue, designate, specify, deny, revoke, promulgate, regulate, classify, authorize, permit, waive, amend, modify, repeal, rescind, adopt, reject, exempt, limit, restrict, impose, propose, control, draft, formulate, allow, set, enact, mandate, preempt, recognize, abolish, accredit',
+  Funding = 'pay, grant, allocate, appropriate, fund, award, receive, reimburse, distribute, compensate, transfer, expend, apportion, disburse, obligate, obtain, allot, reallot, guarantee, insure',
+  Oversight = 'monitor, audit, evaluate, review, investigate, ensure, determine, assess, verify, inspect, examine, oversee, observe, supervise, study, analyze, attest, require, condition',
+  Consultation = 'consult, confer, coordinate, cooperate, collaborate, consider, negotiate, meet, engage, partner, agree, encourage, seek, request, facilitate, participate, share, exchange, convene, assemble',
+  Programmatic = 'provide, report, submit, notify, develop, serve, publish, disclose, inform, describe, identify, prepare, collect, gather, compile, disseminate, transmit, communicate, train, educate, promote, support, assist, advise, recommend, create, design, define, instruct, furnish, file, pilot, test, demonstrate, guide',
+  Operations = 'administer, manage, operate, maintain, conduct, establish, apply, carry out, implement, perform, execute, enter into, use, make, direct, delegate, assign, undertake, contract, run, revise, accept, appoint, exercise, retain, plan, expand, decide, vest, entrust, acquire, construct, procure, convey, hire, employ, devolve') %>%
+  map(~ str_split(.x, ', ')[[1]])
+profile_order <- c(names(profile_verbs), 'Other')
+profile_colours <- setNames(c('#D55E00', '#0072B2', '#E69F00', '#009E73',
+  '#CC79A7', '#56B4E9', '#777777', '#BBBBBB'), profile_order)
+
+# code main-predicate subjects and all verb lemmas in each sentence
+profile_units <- profile_tokens %>% group_by(unit) %>% group_modify(~ {
+  z <- .x
+  roots <- z$token_id[z$dep_rel == 'root']
+  subjects <- z %>% filter(dep_rel == 'nsubj', head_token_id %in% roots)
+  subject_ids <- subjects$token_id
+  subject_words <- z %>% filter(token_id %in% subject_ids |
+    (head_token_id %in% subject_ids & dep_rel %in% c('compound', 'amod', 'flat'))) %>%
+    pull(token) %>% paste(collapse = ' ') %>% str_to_lower()
+  actor <- case_when(str_detect(subject_words, '\\b(we|ssa|commissioner)\\b') ~ 'SSA',
+    str_detect(subject_words, '\\b(state|dds)\\b') ~ 'State/DDS',
+    TRUE ~ 'Other / unresolved')
+  verbs <- z$lemma[z$upos == 'VERB'] %>% str_to_lower()
+  phrase <- paste(str_to_lower(z$lemma), collapse = ' ')
+  matched <- names(profile_verbs)[map_lgl(profile_verbs, function(dictionary) {
+    single <- dictionary[!str_detect(dictionary, ' ')]
+    any(verbs %in% single) ||
+      ('carry out' %in% dictionary && 'carry' %in% verbs && str_detect(phrase, '\\bcarry(?: \\w+){0,3} out\\b')) ||
+      ('enter into' %in% dictionary && 'enter' %in% verbs && str_detect(phrase, '\\benter into\\b'))
+  })]
+  text <- z$sentence[1]
+  modal <- str_detect(str_to_lower(text), '\\b(shall|must|will|may)\\b')
+  obligation <- case_when(
+    str_detect(str_to_lower(text), '\\b(shall|must|will|may) not\\b') ~ 'Prohibitive',
+    str_detect(str_to_lower(text), '\\b(shall|must|will)\\b') ~ 'Mandatory',
+    str_detect(str_to_lower(text), '\\bmay\\b') ~ 'Discretionary', TRUE ~ 'None')
+  tibble(section = z$doc_id[1], sentence = text, actor = actor,
+    obligation = obligation, actionable = modal || length(matched) > 0,
+    first_bucket = if (length(matched)) matched[1] else 'Other',
+    buckets = list(if (length(matched)) matched else 'Other'))
+}) %>% ungroup()
+profile_action <- profile_units %>% filter(actionable)
+profile_pairs <- profile_action %>% select(unit, actor, buckets) %>%
+  unnest_longer(buckets, values_to = 'bucket')
+stopifnot(nrow(profile_action) > 0L, !anyDuplicated(profile_pairs[c('unit', 'bucket')]))
+
+# tabulate denominators separately for sentence and pair panels
+profile_bucket <- profile_pairs %>% count(bucket) %>% mutate(share = n / sum(n))
+profile_obligation <- profile_action %>% count(obligation) %>% mutate(share = n / sum(n))
+profile_actor <- profile_action %>% count(actor) %>% mutate(share = n / sum(n))
+profile_mix <- profile_pairs %>% filter(actor %in% c('SSA', 'State/DDS')) %>%
+  count(actor, bucket) %>% group_by(actor) %>% mutate(share = n / sum(n)) %>% ungroup()
+
+# use full-width panels and consistent print-size type
+profile_theme <- theme_minimal(base_size = 12) + theme(
+  plot.title = element_text(face = 'bold', size = 13),
+  plot.subtitle = element_text(colour = 'grey40', size = 10),
+  panel.grid.major.y = element_blank(), panel.grid.minor = element_blank(),
+  axis.title.y = element_blank(), plot.margin = margin(6, 24, 6, 6))
+profile_bar <- function(data, variable, title, subtitle, colours) {
+  data <- data %>% mutate(category = .data[[variable]],
+    label = sprintf('%.0f%% (%d)', 100 * share, n))
+  ggplot(data, aes(share, fct_rev(factor(category, levels = names(colours))), fill = category)) +
+    geom_col(width = .65, show.legend = FALSE) +
+    geom_text(aes(label = label), hjust = -.12, size = 3.5) +
+    scale_fill_manual(values = colours) +
+    scale_x_continuous(labels = scales::label_percent(), expand = expansion(mult = c(0, .65))) +
+    labs(x = NULL, title = title, subtitle = subtitle) + profile_theme
+}
+```
+
+Figure \@ref(fig:agency-rules-profile) codes the 230 actionable sentences of Subpart Q with an adapted version of Professor Clouser McCann's seven verb categories. Most are mandatory (64 percent). SSA and the states are each the main subject of about a quarter; the rest have other or unresolved subjects. Oversight makes up 19 percent of the categories in SSA's sentences but 9 percent in the states'. Operations makes up 34 percent in the states' sentences and 27 percent in SSA's. The rule text thus sketches what @clouser2016 [p. 9] calls the "architectural choices of who does what": SSA reviews work that states perform (Section 3).
+
+Figure \@ref(fig:agency-hearing-profile) covers the 398 House hearings at which SSA or Social Security Advisory Board officials testified from 1977 to 2014. Ways and Means held 252. A state or local government witness appeared at 48 of 106 hearings in 1977--1986 and at 11 of 104 in 2003--2014. Apart from "disability," the most frequent title terms come from annual Labor and Health appropriations hearings. Section 7.1 outlines a study of what these witnesses said.
+
+```{r agency-rules-profile, fig.cap="Who does what in SSA's disability determination rules", fig.pos='H', fig.width=6.5, fig.height=7.0}
+# compare bucket pairs with sentence-level obligation and subject codes
+profile_a <- profile_bar(profile_bucket, 'bucket', '(a) Verb categories',
+  paste(nrow(profile_pairs), 'pairs of sentences and categories; a sentence can have several'), profile_colours)
+profile_b <- profile_bar(profile_obligation, 'obligation', '(b) Obligation language',
+  paste(nrow(profile_action), 'actionable sentences'),
+  c(Mandatory = '#0072B2', Discretionary = '#009E73', Prohibitive = '#D55E00', None = '#999999'))
+profile_c <- profile_bar(profile_actor, 'actor', '(c) Main acting subject',
+  'Main clause subject only',
+  c(SSA = '#0072B2', 'State/DDS' = '#E69F00', 'Other / unresolved' = '#999999')) +
+  scale_y_discrete(labels = c('Other / unresolved' = 'Other /\nunresolved',
+    'SSA' = 'SSA', 'State/DDS' = 'State/DDS'))
+
+# fit the middle-panel headings within half-page widths
+profile_b <- profile_b + theme(plot.title = element_text(size = 11))
+profile_c <- profile_c + theme(plot.title = element_text(size = 11))
+
+# compare within-actor pair shares with common bucket order
+profile_d <- ggplot(profile_mix, aes(share,
+    fct_rev(factor(bucket, levels = profile_order)), fill = bucket)) +
+  geom_col(width = .65, show.legend = FALSE) +
+  geom_text(aes(label = sprintf('%.0f%% (%d)', 100 * share, n)),
+    hjust = -.1, size = 3.2) +
+  facet_wrap(~ actor, nrow = 1) + scale_fill_manual(values = profile_colours) +
+  scale_x_continuous(labels = scales::label_percent(), limits = c(0, .5),
+    breaks = c(0, .2, .4), expand = expansion(mult = c(0, .02))) +
+  labs(x = NULL, title = '(d) Category mix within each acting subject',
+    subtitle = 'Pairs of sentences and categories; denominators differ from panel (c)') +
+  profile_theme + theme(strip.text = element_text(face = 'bold'))
+
+# assemble full-width panels with room for every label
+rules_plot <- patchwork::wrap_plots(profile_a,
+  patchwork::wrap_plots(profile_b, profile_c, nrow = 1), profile_d,
+  ncol = 1, heights = c(2.6, 1.9, 3.2))
+print(rules_plot)
+```
+
+\begingroup\footnotesize
+*Note:* Source: the author's coding of 20 C.F.R. Part 404, Subpart Q, October 15, 2026 [@cfr2026]. Labels give percentages and counts. Panels (a)/(d) count sentence--category pairs; (b)/(c) count actionable sentences. Mandatory includes "will." Passive and unclear actors remain unresolved. Dictionary matches measure language, not legal authority. Methods: Appendix B.6.
+\par\endgroup
+
+```{r agency-hearing-data, include=FALSE}
+# restrict the witness records to ssa and its advisory board
+hearing_path <- '/Users/jodypark/Library/CloudStorage/Dropbox/github/plsc508_political_networks/replication-extension/ban-park-you-2026-jop/bureaucrats_jop/bureaucrat_pol.dta'
+ssa_appearances <- haven::read_dta(hearing_path) %>%
+  filter(agencycode %in% c('SZ', 'SSAB'))
+ssa_hearings <- ssa_appearances %>% distinct(hearingid, .keep_all = TRUE) %>%
+  mutate(partner = if_else(n_statelocgov > 0, 'State/local witness', 'No state/local witness'),
+    parent_committee = str_remove(committee_name, '^Committee on (the )?'))
+stopifnot(nrow(ssa_appearances) == 560L, nrow(ssa_hearings) == 398L,
+  sum(ssa_hearings$n_statelocgov > 0) == 107L,
+  !anyNA(ssa_hearings$n_statelocgov), min(ssa_hearings$year) == 1977,
+  max(ssa_hearings$year) == 2014)
+
+# preserve historical committee names and use hearing-level counts
+hearing_congress <- ssa_hearings %>% count(congress, partner)
+hearing_committees <- ssa_hearings %>% count(parent_committee, sort = TRUE) %>%
+  slice_head(n = 7) %>% mutate(label = str_replace(parent_committee,
+    'Oversight and Government Reform', 'Oversight / Govt. Reform'))
+
+# count each substantive title word once per hearing
+hearing_terms <- ssa_hearings %>% select(hearingid, title) %>%
+  tidytext::unnest_tokens(word, title) %>%
+  anti_join(tidytext::stop_words %>% distinct(word), by = 'word') %>%
+  filter(str_detect(word, '^[a-z]+$'), nchar(word) > 2,
+    !word %in% c('hearing', 'hearings', 'part', 'parts', 'congress', 'session',
+      'social', 'security', 'administration', 'ssa',
+      'related', 'agencies', 'program', 'programs')) %>%
+  distinct(hearingid, word) %>% count(word, sort = TRUE) %>% slice_head(n = 12)
+
+# compare congresses with a common scale and visible total counts
+hearing_a <- ggplot(hearing_congress, aes(factor(congress), n, fill = partner)) +
+  geom_col(width = .75) +
+  geom_text(data = hearing_congress %>% summarise(n = sum(n), .by = congress),
+    inherit.aes = FALSE, mapping = aes(x = factor(congress), y = n, label = n),
+    vjust = -.4, size = 3.4) +
+  scale_fill_manual(values = c('No state/local witness' = '#0072B2', 'State/local witness' = '#E69F00')) +
+  scale_y_continuous(limits = c(0, 50), breaks = c(0, 20, 40),
+    expand = expansion(mult = c(0, .02))) +
+  labs(x = 'Congress', y = NULL, fill = NULL,
+    title = '(a) Hearings by Congress', subtitle = '398 hearings; 107 included a state/local government witness') +
+  profile_theme + theme(legend.position = 'bottom',
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.text = element_text(size = 9), legend.key.size = grid::unit(.35, 'cm'))
+
+# rank parent committees without merging historical reorganizations
+hearing_b <- ggplot(hearing_committees, aes(n, fct_reorder(label, n))) +
+  geom_col(fill = '#0072B2', width = .65) +
+  geom_text(aes(label = n), hjust = -.2, size = 3.5) +
+  scale_x_continuous(expand = expansion(mult = c(0, .12))) +
+  labs(x = 'Hearings', title = '(b) Leading parent committees',
+    subtitle = 'Seven most frequent; historical names retained') + profile_theme +
+  theme(axis.text.y = element_text(size = 10))
+
+# show exact term counts rather than cloud area
+hearing_c <- ggplot(hearing_terms, aes(n, fct_reorder(word, n))) +
+  geom_col(fill = '#009E73', width = .65) +
+  geom_text(aes(label = n), hjust = -.2, size = 3.5) +
+  scale_x_continuous(expand = expansion(mult = c(0, .12))) +
+  labs(x = 'Hearings mentioning term', title = '(c) Frequent terms in hearing titles',
+    subtitle = 'Agency name and generic words removed; once per hearing') + profile_theme
+```
+
+\newpage
+
+```{r agency-hearing-profile, fig.cap="SSA in House hearings, 1977--2014", fig.pos='H', fig.width=6.5, fig.height=7.4}
+# stack panels to keep committee names and title terms readable
+hearing_plot <- gridExtra::arrangeGrob(hearing_a, hearing_b, hearing_c,
+  ncol = 1, heights = c(3.0, 2.3, 3.0))
+grid::grid.draw(hearing_plot)
+```
+
+\begingroup\footnotesize
+*Note:* Source: the author's calculations from @ban2026. SSA/Advisory Board codes SZ/SSAB; 560 appearances, 398 hearings, 107 with state/local witnesses. Parent committees keep their historical names; Govt. abbreviates Government. Title terms count hearings mentioning each word, not testimony content. Filters: Appendix B.6.
+\par\endgroup
+
+\bigskip
+
+## 2.2 Research Question and Scope
+
+In Policy Lab 1, I asked how SSA's structure and its alignment with overseers shape what its officials tell Congress. This Policy Lab 2 report asks a conditional question. Under what conditions does the federal–state design of disability determination produce variation in access and decisions across states and counties?
+
+My expectation follows @huber2002. Variation should be smallest where the statute specifies the policy in detail and largest where it leaves choices to administrators. Congress specified the eligibility standard and the funding. It left DDS staffing to the states and office locations to SSA.
+
+I compare Kentucky, New Hampshire, and New York (Section 4). Counties enter only as places where federal offices sit, so a closure measures federal withdrawal and not a county decision.
+
+\newpage
+
+# 3. Intergovernmental Structure
+
+@clouser2016 [p. 37] models a policy outcome as a mix of state and national action, weighted by the authority Congress gives the states. In disability determination, that weight is small for the eligibility standard and the money. It is larger for staffing, which federal oversight reaches only indirectly (Section 3.2). Conflict should therefore arise over workloads and staff. Federal responses should take the form of tighter rules or centralization (Section 5). Figure \@ref(fig:intergovernmental-diagram) extends my Policy Lab 1 policy-field diagram with these relationships and marks with [V] the points where jurisdictions can diverge.
+
+```{r intergovernmental-diagram, fig.cap="SSA disability policy field: Policy Lab 1 network extended with intergovernmental relationships", fig.width=10, fig.height=7.8, fig.pos='H'}
+# retain lab 1 node names, institution colours, and three-column hierarchy
+brief_policy_nodes <- tibble::tribble(
+  ~node, ~label, ~x, ~y, ~sector,
+  "congress", "Congress", 0, 12, "Federal oversight",
+  "president", "President\nand OMB", 4, 12, "Federal oversight",
+  "courts", "Federal\ncourts", 8, 12, "Federal oversight",
+  "watchdogs", "GAO / SSA OIG\nAdvisory Board", 0, 9, "Federal oversight",
+  "ssa", "SSA Commissioner\nand central offices", 4, 9, "SSA component",
+  "appeals", "ALJ hearings\nand Appeals Council", 8, 9, "SSA component",
+  "regional", "SSA regional\noffices", 0, 6, "SSA component",
+  "state", "Governors / state\nlegislatures [V]", 8, 6, "State partner",
+  "field", "SSA field offices\nCounty presence [V]", 0, 3, "SSA component",
+  "dds", "State DDS\nagencies [V]", 4, 3, "State partner",
+  "medical", "Medical providers\nand CE vendors [V]", 8, 3, "Non-governmental",
+  "claimants", "Claimants, families,\nand representatives", 4, 0, "Non-governmental"
+)
+
+# extend lab 1 directed relationships with regional and state control channels
+brief_policy_edges <- tibble::tribble(
+  ~from, ~to, ~relation,
+  "congress", "ssa", "Authority",
+  "president", "ssa", "Authority",
+  "courts", "appeals", "Oversight",
+  "watchdogs", "congress", "Oversight",
+  "watchdogs", "ssa", "Oversight",
+  "ssa", "regional", "Authority",
+  "regional", "field", "Authority",
+  "ssa", "dds", "Authority",
+  "ssa", "dds", "Money",
+  "ssa", "appeals", "Authority",
+  "state", "ssa", "Politics",
+  "state", "dds", "Discretion",
+  "field", "dds", "Implementation",
+  "dds", "field", "Implementation",
+  "dds", "medical", "Money",
+  "medical", "dds", "Implementation",
+  "claimants", "field", "Implementation",
+  "claimants", "medical", "Implementation"
+) %>%
+  left_join(brief_policy_nodes %>% select(from = node, x, y), by = "from") %>%
+  left_join(brief_policy_nodes %>% select(to = node, x_to = x, y_to = y),
+            by = "to") %>%
+  mutate(
+    # stop arrows at fixed box boundaries as in lab 1 appendix c
+    dx = x_to - x, dy = y_to - y,
+    offset = 1 / pmax(abs(dx) / 1.35, abs(dy) / 0.65),
+    xend = x_to - dx * offset, yend = y_to - dy * offset,
+    x = x + dx * offset, y = y + dy * offset
+  )
+
+# retain edge roles and reserve okabe-ito blue for variation markers
+edge_colours <- c(Authority = "#D55E00", Money = "#E69F00",
+                  Implementation = "#009E73", Discretion = "#CC79A7",
+                  Oversight = "#666666", Politics = "#000000")
+edge_lines <- c(Authority = "solid", Money = "longdash",
+                Implementation = "solid", Discretion = "dotdash",
+                Oversight = "dashed", Politics = "twodash")
+
+# draw the integrated network with separate curves for parallel funding links
+intergov_plot <- ggplot() +
+  geom_curve(data = filter(brief_policy_edges, relation != "Money"),
+             aes(x = x, y = y, xend = xend, yend = yend,
+                 colour = relation, linetype = relation),
+             curvature = 0.08, linewidth = 0.65,
+             arrow = grid::arrow(type = "closed", length = grid::unit(0.09, "in"))) +
+  geom_curve(data = filter(brief_policy_edges, relation == "Money"),
+             aes(x = x, y = y, xend = xend, yend = yend,
+                 colour = relation, linetype = relation),
+             curvature = 0.35, linewidth = 0.65,
+             arrow = grid::arrow(type = "closed", length = grid::unit(0.09, "in"))) +
+  geom_rect(data = brief_policy_nodes,
+            aes(xmin = x - 1.35, xmax = x + 1.35,
+                ymin = y - 0.65, ymax = y + 0.65, fill = sector),
+            colour = "#333333", linewidth = 0.45) +
+  geom_text(data = brief_policy_nodes,
+            aes(x = x, y = y - if_else(grepl("[V]", label, fixed = TRUE), 0.2, 0),
+                label = gsub(" [V]", "", label, fixed = TRUE)),
+            size = 3.3, lineheight = 1.05) +
+  # mark jurisdictional variation above node labels with an unused edge colour
+  geom_text(data = filter(brief_policy_nodes, grepl("[V]", label, fixed = TRUE)),
+            aes(x = x, y = y + 0.38), label = "[V]", fontface = "bold",
+            colour = "#0072B2", size = 4) +
+  geom_label(data = tibble(x = 5.3, y = 6.1,
+                           label = "SSA to DDS:\n100% federal LAE\nreimbursement"),
+             aes(x = x, y = y, label = label), size = 2.8,
+             fill = "white", linewidth = 0) +
+  scale_colour_manual(values = edge_colours) +
+  scale_linetype_manual(values = edge_lines) +
+  scale_fill_manual(values = c("Federal oversight" = "#EEEEEE",
+                               "SSA component" = "#D9EAF3",
+                               "State partner" = "#FBE7C5",
+                               "Non-governmental" = "#E2F0E7")) +
+  coord_cartesian(xlim = c(-1.65, 9.65), ylim = c(-0.8, 12.8), clip = "off") +
+  labs(colour = "Relationship", linetype = "Relationship", fill = "Institution") +
+  guides(colour = guide_legend(nrow = 2), linetype = guide_legend(nrow = 2),
+         fill = guide_legend(nrow = 2)) +
+  theme_void(base_size = 11) +
+  theme(legend.position = "bottom", legend.box = "vertical",
+        plot.margin = margin(10, 10, 10, 10))
+print(intergov_plot)
+```
+
+\begingroup\footnotesize
+*Note:* [V] marks points where jurisdictions can diverge. Arrows show that a relationship exists, not its strength or frequency. ALJ = administrative law judge; CE = consultative examination; GAO = Government Accountability Office; LAE = Limitation on Administrative Expenses; OIG = Office of the Inspector General; OMB = Office of Management and Budget. Full notes and sources are in Appendix A [@socialsecurity2024; @fiscal2025; @personnel2025; @ssa2025a; @ssa2026k].
+\par\endgroup
+
+\bigskip
+
+## 3.1 Legal Authority
+
+Section 221 of the Social Security Act gives the medical determination to a state agency in any state that agrees to perform it [@ssa2026g]. Section 1633 extends the arrangement to SSI [@ssa2026h]. If a state agency substantially fails to follow the Act and SSA's regulations, SSA may take over the function after notice and a hearing [@socialsecurity1980, § 304]. Subpart Q of SSA's disability regulations in the Code of Federal Regulations (20 C.F.R. Part 404) sets the terms for funding, performance thresholds, and findings of substantial failure [@cfr2026].
+
+In the terms of @clouser2016, the DDS arrangement is intergovernmental delegation. Congress routed a federal program through state bureaucracies but kept the power to take it back. Medicaid, by contrast, combines state money with waivers that states negotiate with federal executives [@michener2018; @thompson2013]. Disability determination involves neither.
+
+\bigskip
+
+## 3.2 Money
+
+The federal government pays the full cost of state disability determinations. SSA gives states funds "in advance or by way of reimbursement" for necessary costs [@fiscal2025]. The money comes from SSA's Limitation on Administrative Expenses (LAE) account, not from a grant program. SSA's budget justification lists payments to state DDSs of about \$2.55 billion in FY2026 and \$2.69 billion requested for FY2027 [@ssa2026r]. USAspending.gov records \$2.33 billion in FY2024 obligations for the DDS activity within the LAE account. None of it appears as grant awards, so the data cannot show how much each state received [@usaspending2026, see Appendix B]. These funds pay for administration, not benefits.
+
+Full funding removes a lever that states hold in grant programs. A state saves nothing directly by denying SSDI claims. SSI differs where states pay supplements. @keiser2001 finds that state examiners reduce access when their state bears program costs, especially under fiscal stress. Federal money also does not buy control over staff. Federal rules ask states to avoid personnel freezes only "to the best of [their] ability," and state personnel standards govern hiring and pay [@personnel2025]. In 2009, ten states had furloughed or planned to furlough DDS employees even though SSA paid their salaries [@crs2009]. DDS attrition peaked at 17.8 percent in FY2022. Some DDS employees left for federal jobs that offered higher pay and more telework [@gao2026, pp. 29--30].
+
+\bigskip
+
+## 3.3 Implementation
+
+A claim moves through three levels. A federal field office takes the application and checks non-medical eligibility. The state DDS gathers medical evidence, may purchase consultative examinations, and decides whether the claimant is disabled [@ssa2026c; @medical2025]. Denied claimants can request reconsideration by the DDS and then appeal to a federal administrative law judge (ALJ), the Appeals Council, and federal court [@ssa2026k].
+
+The pipeline narrows at each step. In FY2025, SSA reported 2.25 million initial decisions with a 36 percent allowance rate. Reconsideration allowed 16 percent of about 585,000 cases. ALJs allowed 50 percent of about 278,000 [@ssa2026u]. These shares are not final awards, since a favorable medical decision still requires non-medical eligibility.
+
+\bigskip
+
+## 3.4 Discretion
+
+Statutory detail limits discretion but cannot remove it [@huber2002]. The 1984 Act requires uniform standards at every level of determination and review [@socialsecurity1984, § 10]. The Supreme Court upheld the step-two severity screen in *Bowen v. Yuckert*, a case that began with a state agency's denial [@bowen1987]. Judgments about severity, functional capacity, and the weight of medical evidence remain with state examiners.
+
+Discretion also sits outside the case file. States hire and manage DDS staff within federal funding limits [@personnel2025]. SSA decides where to keep field offices through periodic service-area reviews that regional officials approve [@gao2017a, p. 7]. Neither choice changes the eligibility standard, but both can affect how quickly a claim moves.
+
+\bigskip
+
+## 3.5 Oversight
+
+Oversight runs on three tracks. The first is federal performance management. Regulations set a 97 percent performance accuracy target for initial claims and a 37-day target for the DDS stage of Title II initial claims. A substantial-failure finding requires repeated failures on two of three thresholds with accuracy among them. These failures must persist after mandatory performance support and an adjustment period. The state then receives notice and an opportunity for a hearing [@cfr2026, §§ 404.1642--404.1643, 404.1670]. Federal quality reviewers also sample DDS decisions [@ssa2022]. The 1980 Act required review of state allowances before they take effect, rising to 65 percent of allowances after FY1982 [@socialsecurity1980, § 304].
+
+In the second track, ALJs, the Appeals Council, and federal courts review individual claims rather than state performance [@ssa2026k]. In the third, the Government Accountability Office (GAO) and SSA's Office of the Inspector General audit program-wide problems and report to Congress [@gao2026; @inspector2026].
+
+\bigskip
+
+## 3.6 Legal and Policy Mechanisms
+
+Two statutes built the current arrangement. The Social Security Disability Amendments of 1980 turned federal–state agreements into regulated delegation. Besides performance standards and pre-effectuation review, the Act mandated a continuing disability review (CDR) at least once every three years for most beneficiaries, starting in 1982 [@socialsecurity1980]. It set no medical-improvement standard for ending benefits.
+
+The Social Security Disability Benefits Reform Act of 1984 responded to the CDR crisis that followed. It required evidence of medical improvement before most terminations and allowed benefits to continue during appeal. It also required uniform standards issued through notice-and-comment rulemaking [@socialsecurity1984, §§ 2, 7, 10]. Section 17 set short deadlines for SSA to investigate and take over a noncompliant state agency, though these deadlines expired at the end of 1987. @metzger2008 describes administrative law as a substitute for constitutional federalism doctrine. The 1984 Act fits that account because it used published federal rules to constrain state implementation.
+
+\newpage
+
+# 4. Jurisdictional Comparison
+
+I compare Kentucky, New Hampshire, and New York. Kentucky and New Hampshire had the lowest and highest initial favorable rates in FY2024, so the pair shows how far decisions can differ under one rule. New York had the most field-office closures of any state from 2000 to 2024, which adds variation in the federal office footprint.
+
+Rates in Table \@ref(tab:state-comparison) come from SSA's state agency workload file [@ssa2026q]. Office measures come from an office-year panel of SSA field offices that I built from current and historical SSA office lists. I use regular offices in the 50 states and the District of Columbia (DC) from 2000 to 2024 (Appendix B).
+
+```{r state-comparison, results='asis'}
+# report verified ssa state agency measures and author-compiled office counts
+state_comparison <- tibble(
+  State = c("Kentucky", "New Hampshire", "New York", "U.S. (50 states + DC)"),
+  `Favorable rate, FY2024` = c("29.4", "47.0", "35.6", "35.3"),
+  `Favorable rate, FY2019` = c("29.3", "51.5", "37.8", "35.1"),
+  `Adults receiving benefits, FY2024` = c("8.8", "5.7", "5.2", "5.0"),
+  `Adult filing rate, FY2024` = c("1.66", "0.89", "0.88", "0.97"),
+  `Offices 2000 / 2024 (closures)` = c("27 / 25 (2)", "6 / 6 (0)", "86 / 67 (19)",
+                                       "1,293 / 1,170 (125)"),
+  `Offices per 1M adults, 2024` = c("9.2", "7.0", "5.5", "5.7")
+)
+
+# format comparable state measures with source and measurement notes
+state_comparison_table <- knitr::kable(state_comparison, format = "latex", booktabs = TRUE,
+             escape = TRUE, caption = "State comparison of disability determinations and federal field-office presence") %>%
+  kable_styling(latex_options = "HOLD_position", font_size = 9) %>%
+  column_spec(1, width = "0.95in") %>%
+  column_spec(2:7, width = "0.70in") %>%
+  footnote(general = "Rates are percentages. Favorable rate is the adult favorable determination rate at the initial state DDS level; it is not a final award rate. Adults receiving benefits is the share of the population aged 18--64 receiving SSA disability benefits. Filing rate is adult claims received as a share of the eligible adult population. U.S. values pool the 50 states and DC. Offices are regular SSA field offices; remote and support sites are excluded. Offices per 1M adults divides 2024 offices by the population aged 18--64. Sources: SSA, Fiscal Year Disability Claim Data (SSA-SA-FYWL, FY2024 rows updated February 2026); the author's compilation of SSA field-office records, 2000--2024; the author's calculations.",
+           general_title = "Note: ", footnote_as_chunk = TRUE,
+           threeparttable = TRUE, escape = TRUE)
+
+# keep the italic note label and its text in one item
+cat(sub("\\item \\textit{Note: } \n\\item ", "\\item \\textit{Note:} ",
+        state_comparison_table, fixed = TRUE))
+```
+
+\bigskip
+
+## 4.1 Kentucky
+
+Kentucky's FY2024 initial adult favorable rate was 29.4 percent, almost the same as in FY2019 [@ssa2026q]. Demand is high. In FY2024, 8.8 percent of Kentucky adults aged 18 to 64 received SSA disability benefits against 5.0 percent nationally. The state's adult filing rate was 1.66 percent of eligible adults, well above the national 0.97 percent. A large applicant pool with many marginal claims could produce a low allowance rate under a fixed standard. @rupp2012 finds that applicant composition and local unemployment substantially affect state initial allowance rates.
+
+\bigskip
+
+## 4.2 New Hampshire
+
+New Hampshire's rate was 47.0 percent in FY2024, down from 51.5 percent in FY2019 [@ssa2026q]. Its benefit receipt rate of 5.7 percent was close to the national rate, and its filing rate of 0.89 percent was below it. New Hampshire kept all six of its field offices from 2000 to 2024. Neither New Hampshire nor Kentucky appears in SSA's chronology of state halts of CDR terminations in 1983--84 [@collins1985].
+
+\bigskip
+
+## 4.3 New York
+
+New York sits near the middle on decisions. Its FY2024 initial adult favorable rate was 35.6 percent, close to the pooled national rate of 35.3 percent [@ssa2026q]. Its filing rate of 0.88 percent was the lowest of the three states. New York stands out on the federal footprint. It lost 19 of its 86 regular offices between 2000 and 2024 and ended with fewer offices per adult than the other two states (Table \@ref(tab:state-comparison)).
+
+New York also has a history of open conflict with SSA, from its 1983 halt of CDR terminations to *Bowen v. City of New York* (Section 5).
+
+\bigskip
+
+## 4.4 Comparison and Sources of Variation
+
+Table \@ref(tab:design-matrix) sorts each source of variation by who controls it. In the terms of @clouser2025 [pp. 41, 43], federal rules standardize the DDSs' capability (legal powers and quality control) more than their capacity (staff and other resources). New Hampshire's initial favorable rate was 17.6 percentage points higher than Kentucky's in FY2024, so a design shared by all three states cannot by itself explain the gap. SSA's prototype test gave New Hampshire and New York different appeal steps, but it ended by January 2019 [@ssa2018]. The ten prototype state agencies had no influence on SSA's decision to end it [@ssab2020, p. 3].
+
+```{r design-matrix, results='asis'}
+# separate shared design from federal choices and jurisdiction-specific factors
+design_matrix <- tribble(
+  ~Source, ~`Controlled by`, ~`Kentucky, New Hampshire, and New York`,
+  "Eligibility standard", "Congress and SSA regulations", "Same in all three",
+  "DDS funding", "SSA (100% federal LAE)", "Same in all three",
+  "Accuracy review and takeover", "SSA", "Same in all three",
+  "Appeal steps", "SSA testing authority", "NH and NY skipped reconsideration under SSA's prototype test until January 2019; KY did not",
+  "Circuit court law", "Federal courts and SSA acquiescence", "Sixth (KY), First (NH), and Second (NY) Circuits",
+  "Field-office network", "SSA", "Closures 2000--2024: KY 2, NH 0, NY 19",
+  "DDS staffing and pay", "State personnel systems", "Varies; no comparable public state data",
+  "Applicant pool", "State population and economy", "Adult filing rate, FY2024: KY 1.66, NH 0.89, NY 0.88"
+)
+
+# group control mechanisms and preserve the existing table-note style
+design_matrix_table <- knitr::kable(design_matrix, format = "latex", booktabs = TRUE,
+             escape = TRUE, caption = "Sources of variation in initial disability decisions and access, by who controls them") %>%
+  kable_styling(latex_options = "HOLD_position", font_size = 9) %>%
+  column_spec(1, width = "1.35in") %>%
+  column_spec(2, width = "1.45in") %>%
+  column_spec(3, width = "2.95in") %>%
+  pack_rows("Uniform federal design", 1, 3) %>%
+  pack_rows("Federal choices that vary by place", 4, 6) %>%
+  pack_rows("Jurisdiction-specific", 7, 8) %>%
+  footnote(general = "Prototype test: examiners could decide most initial cases without a medical consultant's signature until October 1, 2018, and reconsideration returned for initial denials on or after January 1, 2019, in New Hampshire and New York (83 FR 63965). Circuit law: 20 C.F.R. § 404.985. Staffing: 20 C.F.R. § 404.1621. Funding: 20 C.F.R. § 404.1626. Review and takeover: 20 C.F.R. Part 404, Subpart Q. Filing rates: SSA-SA-FYWL, FY2024. Offices: the author's compilation of SSA field-office records, regular offices, 2000--2024.",
+           general_title = "Note: ", footnote_as_chunk = TRUE,
+           threeparttable = TRUE, escape = TRUE)
+
+# keep the italic note label and its text in one item
+cat(sub("\\item \\textit{Note: } \n\\item ", "\\item \\textit{Note:} ",
+        design_matrix_table, fixed = TRUE))
+```
+
+
+Jurisdiction-specific factors are the more plausible sources. SSA's own research finds that adjusting for economic, demographic, and health factors cuts cross-state variation in allowance rates in half [@strand2002]. Across all 50 states and DC, higher filing rates went with lower favorable rates in FY2024 ($r = -0.41$; Figure \@ref(fig:state-patterns)a). Kentucky fits that pattern. New Hampshire's rate was about 9 points above the fitted line, the largest gap of any state. The Social Security Advisory Board reports DDS differences in examiner training, examiner roles, and the use and quality of consultative examinations [@ssab2020, p. 4]. Such DDS practices could explain part of New Hampshire's gap, but no public state data let me test them. @keiser1999 links state variation to partisan politics as well as need and economic conditions.
+
+```{r state-patterns, fig.cap="FY2024 initial favorable rates across the 50 states and DC, by filing rate and office closures", fig.width=9, fig.height=4.4, fig.pos='H'}
+# read fy2024 workload measures for the 50 states and dc
+state_rates <- read_csv(fywl_path, show_col_types = FALSE) %>%
+  mutate(state = str_trim(`State Code`)) %>%
+  filter(Date == 2024, state %in% c(state.abb, "DC")) %>%
+  transmute(state, favorable = `Adult Favorable  Determination Rate`,
+            filing = `Eligible Adult Population Filing Rate`)
+
+# count regular offices open in 2000 and closures through 2024
+state_offices <- read_csv(office_path, col_types = cols(.default = col_character())) %>%
+  mutate(across(c(year, open, close, analysis_office, year_complete), as.integer)) %>%
+  filter(analysis_office == 1, year_complete == 1, year %in% 2000:2024,
+         state %in% c(state.abb, "DC")) %>%
+  group_by(state) %>%
+  summarise(open_2000 = sum(open == 1 & year == 2000),
+            closures = sum(close == 1, na.rm = TRUE), .groups = "drop") %>%
+  mutate(closed_share = 100 * closures / open_2000)
+
+# join measures and verify cases and unweighted correlations against source files
+state_patterns <- left_join(state_rates, state_offices, by = "state") %>%
+  mutate(case = if_else(state %in% c("KY", "NH", "NY"), state, "Other"))
+comparison_checks <- state_patterns %>%
+  filter(state %in% c("KY", "NH", "NY")) %>%
+  arrange(state)
+r_filing <- cor(state_patterns$favorable, state_patterns$filing)
+r_closed <- cor(state_patterns$favorable, state_patterns$closed_share)
+stopifnot(nrow(state_patterns) == 51, n_distinct(state_patterns$state) == 51,
+          !anyNA(state_patterns),
+          all(near(comparison_checks$favorable, c(29.39, 47.00, 35.58))),
+          all(near(comparison_checks$filing, c(1.66, 0.89, 0.88))),
+          all(comparison_checks$open_2000 == c(27, 6, 86)),
+          all(comparison_checks$closures == c(2, 0, 19)),
+          round(r_filing, 2) == -0.41, round(r_closed, 2) == 0.05)
+
+# reshape measures into two panels with a common favorable-rate axis
+panel_labels <- c(filing = "(a) Adult filing rate, FY2024 (%)",
+                  closed_share = "(b) Share of 2000 offices closed by 2024 (%)")
+plot_data <- state_patterns %>%
+  pivot_longer(c(filing, closed_share), names_to = "measure", values_to = "x") %>%
+  mutate(measure = factor(panel_labels[measure], levels = panel_labels))
+r_labels <- tibble(measure = factor(panel_labels, levels = panel_labels),
+                   label = sprintf("r = %.2f", c(r_filing, r_closed)))
+pooled_label <- tibble(measure = factor(panel_labels["closed_share"], levels = panel_labels),
+                       x = Inf, favorable = 35.27, label = "U.S. pooled rate")
+
+# highlight comparison states in okabe-ito colours without a legend
+case_colours <- c(KY = "#D55E00", NH = "#0072B2", NY = "#009E73")
+state_plot <- ggplot(plot_data, aes(x = x, y = favorable)) +
+  geom_hline(yintercept = 35.27, linetype = "dashed", colour = "#666666", linewidth = 0.4) +
+  geom_smooth(data = filter(plot_data, measure == panel_labels["filing"]),
+              method = "lm", formula = y ~ x, se = FALSE,
+              colour = "#333333", linewidth = 0.5) +
+  geom_point(colour = "#BBBBBB", size = 2) +
+  geom_point(data = filter(plot_data, case != "Other"), aes(colour = case), size = 3) +
+  geom_text(data = filter(plot_data, case != "Other"), aes(y = favorable + if_else(case == "KY", -1.1, 1.1),
+                label = state, colour = case), size = 3.6, fontface = "bold", show.legend = FALSE) +
+  geom_text(data = r_labels, aes(x = Inf, y = Inf, label = label), inherit.aes = FALSE,
+            hjust = 1.1, vjust = 1.5, size = 3.6, colour = "#333333") +
+  geom_text(data = pooled_label, aes(label = label), hjust = 1.05,
+            vjust = -0.5, size = 3, colour = "#666666") +
+  facet_wrap(~ measure, scales = "free_x", strip.position = "bottom") +
+  scale_colour_manual(values = case_colours, guide = "none") +
+  labs(x = NULL, y = "Initial adult favorable rate, FY2024 (%)") +
+  theme_minimal(base_size = 11) +
+  theme(strip.placement = "outside", strip.text = element_text(size = 10),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(colour = "#E5E5E5", linewidth = 0.35),
+        plot.margin = margin(8, 12, 8, 8))
+print(state_plot)
+```
+
+\begingroup\footnotesize
+*Note:* Each point is one of the 50 states or DC; Kentucky, New Hampshire, and New York are labeled. The dashed line is the pooled U.S. rate (35.3 percent). The solid line in panel (a) is an unweighted least-squares fit, and $r$ is the unweighted correlation across 51 jurisdictions. Panel (b) divides 2000--2024 closures of regular offices by offices open in 2000; shares are noisy in states with few offices. Associations are descriptive. Sources: SSA, Fiscal Year Disability Claim Data (SSA-SA-FYWL, FY2024 rows updated February 2026); the author's compilation of SSA field-office records, 2000--2024; the author's calculations.
+\par\endgroup
+
+
+New York shows a different kind of variation. Its near-national decision rate coexists with the largest office losses of any state. Across states, closure shares and favorable rates are nearly uncorrelated ($r = 0.05$; Figure \@ref(fig:state-patterns)b). Office closures are SSA's choice, so this part of the variation originates with the federal network and not with state administration. Section 6.2 reviews evidence that closures reduce claiming. The comparison cannot identify the mechanisms behind either pattern.
+
+
+
+
+\newpage
+
+# 5. Politics and Conflict
+
+States cannot rewrite the standard, so they resist through the staff and procedures they control. Claimants and states turn to the courts. Hearings give Congress one channel for learning about state-level problems.
+
+\bigskip
+
+## 5.1 Bargaining and State Resistance
+
+State agencies carried out the reviews that the 1980 Act required. According to the Supreme Court, SSA reported that about 200,000 people were wrongfully terminated and then reinstated between March 1981 and April 1984. Summarizing GAO evidence, Senator Cohen said the message "perceived by the State agencies" was "to deny, deny, deny" [@schweiker1988, p. 416].
+
+States pushed back in two ways. Some pointed to capacity. At a June 1983 House hearing, SSA's deputy commissioner said some states had large backlogs because state hiring freezes left them short of staff [@collins1985, p. 22]. Others refused to continue. SSA's own chronology lists 18 states whose governors or agency heads halted or held CDR terminations in 1983 and 1984. In March 1983, Massachusetts ordered its DDS to follow First Circuit standards that state officials read as requiring medical improvement. New York stopped terminations that July. Arkansas, Pennsylvania, and Texas took similar steps in 1983 and 1984 [@collins1985, p. 32].
+
+\bigskip
+
+## 5.2 Litigation and Policy Change
+
+Courts shaped the design through class actions. In *Bowen v. City of New York*, a statewide class challenged an internal SSA policy applied at the state agency's psychiatric assessment. The plaintiffs alleged that the policy was "never published in the Federal Register." The Court allowed their claims to proceed despite the 60-day filing limit [@bowen1986]. The case shows federal guidance reaching claimants through a state agency without public notice. The 1984 requirement to issue uniform standards through rulemaking addressed the same gap (Section 3.6).
+
+Courts also drew limits. In *Heckler v. Day*, a Vermont class sought court-imposed deadlines for reconsiderations and hearings. The Court held that injunctions imposing deadlines on future disability claims would be "an unwarranted judicial intrusion" into a pervasively regulated area [@heckler1984, p. 119]. Circuit law adds a regional layer. SSA's acquiescence rule generally applies a circuit holding that conflicts with SSA's interpretation to relevant claims within that circuit. Exceptions apply when the government seeks further review or relitigates the issue [@ssa1998].
+
+\bigskip
+
+## 5.3 Partisan and Institutional Conflict
+
+Three institutional channels carry conflict today. The first is executive action. In March 2026, SSA announced that its federal Disability Case Review unit would take over medical CDRs from state DDSs [@ssa2026l]. The FY2027 budget describes the move as "centralizing oversight at the Federal level" [@ssa2026t]. The 1980 Act already allowed either the state agency or SSA to conduct these reviews, so the shift needed no new statute [@socialsecurity1980, § 311]. The move fits what @thompson2013 calls executive federalism.
+
+The second channel is state personnel policy, such as hiring freezes and DDS furloughs (Section 3.2).
+
+The third channel is congressional oversight. In August 1982, representatives of the New York, Pennsylvania, and Minnesota state agencies told the Senate Finance Committee about large CDR caseloads [@collins1985, pp. 16--17]. Senator Heinz later referred to "dozens of congressional hearings" on the review crisis. The 1984 Act passed without a single opposing vote in either chamber [@schweiker1988, pp. 416--417]. In a June 2026 statement to two Ways and Means subcommittees, the Commissioner said SSA plans to eliminate the state DDS backlog [@bisignano2026]. Partisan alignment between members and agency witnesses may shape how much analysis such exchanges contain [@ban2026]. Section 7.1 takes up that question.
+
+\newpage
+
+# 6. Evaluation of Effectiveness
+
+I evaluate the arrangement on access, timeliness, and consistency. Spending and implementation data show what the system does. Outcome data show what claimants experience. Most available evidence is of the first kind.
+
+The spending evidence shows full federal funding of state capacity, including about 13,000 DDS workyears in FY2025 [@ssa2026s]. Spending data cannot show whether the money reaches the places with the greatest need.
+
+\bigskip
+
+## 6.1 Federal Service Presence over Time
+
+SSA's field network contracted in bursts. Figure \@ref(fig:closure-timing) shows that regular office closures clustered in 2011--2014. Those four years account for 65 of the 125 closures recorded from 2000 to 2024. Closures were rare after 2014. The figure records when closures occurred but cannot show whether budgets, local politics, or falling demand drove them.
+
+```{r closure-timing, fig.cap="Timing of regular SSA field-office closures, 2000--2024", fig.pos='H'}
+# import the existing annual closure figure without altering its data
+knitr::include_graphics(figure_files[1])
+```
+
+\begingroup\footnotesize
+*Note:* Source: the author's SSA Accessibility descriptive outputs, September 23, 2026. Covers regular offices in the 50 states and DC; remote and support sites are excluded. Closure counts are descriptive and do not measure waiting time or benefit receipt.
+\par\endgroup
+
+\bigskip
+
+## 6.2 Geographic Access and Unequal Exposure
+
+In 2010, 2,256 of 3,143 county equivalents (71.8 percent) had no regular office (Appendix B). The closure analysis concerns counties that had an office to lose. Of the 125 closures from 2000 to 2024, 50 removed the last office in a county. Figure \@ref(fig:closure-map) shows all recorded closures relative to the 2025 network.
+
+Office loss matters for claiming. @deshpande2019 find that closures lead to a persistent 16 percent decline in disability recipients in surrounding areas and a smaller 10 percent decline in applications. Congestion at neighboring offices appears to matter more than higher travel or information costs. In administrative burden terms, a closure raises the learning and compliance costs of applying [@moynihan2015]. Capacity at the remaining offices also varies by place. GAO reports that SSA began requiring appointments for in-person service in 2024. One Alaska office had fewer than 10 staff in 2024, down from about 50 in 2007 [@gao2026, pp. 31--32]. Online filing can offset some of these costs. @foote2019 find larger increases in applications after online filing began in counties with more internet access.
+
+```{r closure-map, fig.cap="Regular SSA offices open in 2025 and closures recorded in 2000--2024", fig.pos='H'}
+# import the existing county-boundary map with alaska and hawaii insets
+knitr::include_graphics(figure_files[2])
+```
+
+\begingroup\footnotesize
+*Note:* Source: the author's SSA Accessibility descriptive outputs, September 23, 2026. Points show office locations and recorded closures; county boundaries are spatial context. The map does not measure travel time, staffing, appointment availability, or the accessibility of online and telephone services.
+\par\endgroup
+
+\bigskip
+
+## 6.3 Decision Quality, Timeliness, and Limits of Inference
+
+Timeliness is the clearest weakness. SSA reported an average initial-claim processing time of 226 days in FY2025 [@ssa2026r]. At the DDS stage alone, average processing time rose from 132 days in March 2020 to 171 days in December 2021 [@gao2022, p. 27]. The DDS backlog peaked at more than 1.26 million pending claims in June 2024. SSA reported 831,000 pending claims in February 2026 [@ssa2026l] and 862,000 in its June 2026 testimony [@bisignano2026]. The backlog fell, but these counts say nothing about whether decisions became more accurate or fair.
+
+Consistency is harder to judge. The same standard produced a 17.6-point gap between Kentucky and New Hampshire. At the hearing level, GAO found that the allowance rate for a typical claim could vary by as much as 46 percentage points depending on the judge [@gao2017, p. 16]. Federal quality review checks DDS accuracy, but accuracy against the federal standard can coexist with large differences in who applies and who is allowed. GAO reported lower initial allowance rates for Black applicants than for white applicants in 1988 [@gao1992a]. Recent work with linked survey and administrative data finds that racial differences shrink and are generally not statistically significant after controls [@thompson2026]. I treat these demographic patterns as descriptive context.
+
+GAO's collaboration framework points to a structural gap. Its leading practices include defining common outcomes, ensuring accountability, and clarifying roles and responsibilities [@gao2023]. The SSA–DDS partnership sets outcomes and roles in regulation, but state personnel systems still govern DDS staffing (Section 3.2). SSA's announced transfer would move medical CDRs to a federal unit whose staff SSA directly manages [@ssa2026l; @ssa2026t]. The effects of that transfer on accuracy and speed remain to be evaluated.
+
+\newpage
+
+# 7. Conclusions
+
+Federalism design explains where variation can enter SSDI and SSI disability determinations. Congress fixed the standard and paid the full cost while giving SSA review and takeover powers. These choices keep states from changing who qualifies, but they do not remove variation. The evidence suggests three possible channels. First, differences in applicant pools and local economies shape decision rates under a common rule. Second, state control over DDS staffing ties federal workloads to state personnel decisions. Third, SSA's control over office locations makes access depend on federal choices that fall unevenly across states and counties.
+
+The three-state comparison and the all-state data in Figure \@ref(fig:state-patterns) suggest that these sources of variation are distinct. Kentucky and New Hampshire differ sharply in decisions but little in office losses. New York had large office losses but an initial favorable rate near the national rate. Any one of these states studied alone would show only one kind of variation. The history also shows how the design channels conflict. States that could not change the rule stopped applying it, and Congress answered by writing the rule more tightly.
+
+The evidence is descriptive throughout. It identifies plausible mechanisms but does not estimate their effects. My Policy Lab 3 report can build on this evidence by tracing how a claim moves from a field office to a DDS decision in each of the three states.
+
+\bigskip
+
+## 7.1 Future Research
+
+Two of my research projects build on this report. My paper with Professor Tracee Saunders asks whether county demographic and political context predicts which counties lose an SSA field office.
+
+For another project, I plan to extend @ban2026. Their House witness data for 1977--2014 [@ban2026, p. 791] build on @ban2023. SSA and Social Security Advisory Board officials made 560 appearances across 398 hearings, and 107 of those hearings also had a state or local government witness (Figure \@ref(fig:agency-hearing-profile)). I plan to ask under what conditions, such as partisan alignment with committee members, SSA officials raise intergovernmental implementation problems in hearings. The transcripts of @park2021 begin in 1997, so the 1980s hearing texts will come from ProQuest Legislative Insight. I will measure agenda access with @liu2025 and treat testimony content and policy influence as separate outcomes. A close study of one agency shows what large-sample measures may miss. I will therefore hand code a sample of 1980s disability hearings and use those codes to validate any large language model classifier.
+
+\newpage
+
+```{r export-visualizations, include=FALSE, eval=isTRUE(getOption("ppol805.export", FALSE))}
+# enable with options(ppol805.export = TRUE) when knitting from this folder
+export_root <- file.path(getwd(), "visualization")
+export_table <- file.path(export_root, "table")
+export_figure <- file.path(export_root, "figure")
+invisible(lapply(c(export_table, export_figure), dir.create,
+  recursive = TRUE, showWarnings = FALSE))
+
+# use rendered numbers; appendix b tables use tb and appendix figures would use fa or fb
+export_tables <- list(t1_state_comparison = state_comparison_table,
+  t2_design_matrix = design_matrix_table)
+export_names <- c("t1_state-comparison_261012", "t2_design-matrix_261012")
+
+# compile table images only in temporary storage and keep the original latex fragments
+export_table_image <- function(table, name, number) {
+  tex <- file.path(export_table, paste0(name, ".tex"))
+  scratch <- tempfile("ppol805-table-")
+  dir.create(scratch)
+  previous_dir <- setwd(scratch)
+  on.exit({
+    setwd(previous_dir)
+    unlink(scratch, recursive = TRUE)
+  }, add = TRUE)
+  fragment <- sub("\\item \\textit{Note: } \n\\item ",
+    "\\item \\textit{Note:} ", as.character(table), fixed = TRUE)
+  fragment <- gsub("\\(\\\\#tab:[^)]*\\)", "", fragment)
+  table[] <- fragment
+  kableExtra::save_kable(table, file = tex)
+  writeLines(c("\\documentclass{article}",
+    "\\usepackage[paperwidth=8.5in,paperheight=11in,margin=1in]{geometry}",
+    "\\usepackage{fontspec,booktabs,array,multirow,float,colortbl,threeparttable,makecell}",
+    "\\pagestyle{empty}", "\\begin{document}",
+    paste0("\\setcounter{table}{", number - 1L, "}"), fragment,
+    "\\end{document}"), file.path(scratch, "table.tex"))
+  tinytex::xelatex(file.path(scratch, "table.tex"), clean = TRUE)
+  status <- system2("pdftoppm", c("-png", "-singlefile", "-r", "300",
+    shQuote(file.path(scratch, "table.pdf")), shQuote(file.path(scratch, "table"))),
+    stdout = FALSE, stderr = FALSE)
+  stopifnot(status == 0L, file.exists(file.path(scratch, "table.png")))
+  image <- magick::image_read(file.path(scratch, "table.png")) %>%
+    magick::image_trim() %>% magick::image_border("white", "20x20")
+  invisible(magick::image_write(image, file.path(export_table, paste0(name, ".png")),
+    density = "300x300"))
+}
+invisible(Map(export_table_image, export_tables, export_names, seq_along(export_tables)))
+
+# save the four report-created figures at their paper dimensions & 300 dpi
+export_plots <- list(rules_plot, hearing_plot, intergov_plot, state_plot)
+export_figures <- c("f1_agency-rules-profile_261012.png",
+  "f2_agency-hearing-profile_261012.png", "f3_intergovernmental-diagram_261012.png",
+  "f4_state-patterns_261012.png")
+invisible(purrr::pwalk(list(export_plots, export_figures,
+  c(6.5, 6.5, 10, 9), c(7, 7.4, 7.8, 4.4)), function(plot, name, width, height) {
+    ggplot2::ggsave(file.path(export_figure, name), plot = plot,
+      width = width, height = height, units = "in", dpi = 300, bg = "white")
+  }))
+
+# apply my file name rule: prefix source filenames with this paper's figure or appendix-table number
+stopifnot(all(file.copy(figure_files,
+  file.path(export_figure, paste0(c("f5_", "f6_"), basename(figure_files))),
+  overwrite = TRUE)))
+for (extension in c("tex", "png")) {
+  sources <- sub("\\.tex$", paste0(".", extension), table_files)
+  stopifnot(all(file.copy(sources,
+    file.path(export_table, paste0("tb", seq_along(sources), "_", basename(sources))),
+    overwrite = TRUE)))
+}
+```
+
+# References
+
+::: {#refs}
+:::
+
+\newpage
+
+# Appendices
+
+## Appendix A: Intergovernmental Diagram Notes
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{A\arabic{table}}
+
+Figure \@ref(fig:intergovernmental-diagram) in Section 3 extends the policy-field diagram from Policy Lab 1. It keeps the Policy Lab 1 actors, institution colors, and hierarchy. It adds SSA regional offices, governors and state legislatures, and county-level field office presence. Color and line type distinguish authority, money, implementation, discretion, oversight, and politics. [V] marks points where jurisdictions can diverge. Arrows show that a relationship exists, not its strength or frequency.
+
+
+
+\begingroup\footnotesize
+*Note:* Each actor appears once. [V] (bold, colored) = point where jurisdictions can diverge: DDS staffing and pay, medical evidence and consultative examination (CE) vendors, field-office stock, and state personnel and budget controls. Field offices are federal offices located in counties. State management discretion operates within federal requirements. SSA reimburses necessary DDS administrative costs within approved budgets; the SSA-to-DDS money arrow denotes 100\% federal LAE reimbursement. DDS payments to exam vendors are a separate flow. Congress appropriates funds; the President and the Office of Management and Budget (OMB) shape executive priorities and budget proposals. Court arrows show review authority over final agency decisions following ALJ and Appeals Council procedures, not case flow. Links from GAO, SSA's Office of the Inspector General (OIG), and the Social Security Advisory Board summarize oversight and advice; these institutions have distinct powers. Implementation arrows summarize case or evidence flows, and the figure omits the full appeal sequence. Sources: 42 U.S.C. \S\ 421; 20 C.F.R. Part 404, Subpart Q; Policy Lab 1 Appendices B/C; SSA appeals guidance [@socialsecurity2024; @fiscal2025; @personnel2025; @ssa2025a; @ssa2026k].
+\par\endgroup
+
+\bigskip
+
+## Appendix B: Supporting Tables and Measurement
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{B\arabic{figure}}
+\setcounter{table}{0}
+\renewcommand{\thetable}{B\arabic{table}}
+
+The field-office data come from an office-year panel that I built for my SSA field-office project. Office locations come from SSA's current office list, historical SSA listings, and Freedom of Information Act records. Offices are linked across years by SSA office codes and reviewed address matches. Each office is then geocoded and assigned to a county. The cleaned file has 36,839 office-year rows for 1,403 offices from 1998 to 2026. Its variables include the office identifier, year, open and closure indicators, office type, state, county code, and coordinates. The 1998--2016 annual lists give exact dates for documented closures. After 2016, a closure is coded when an office permanently drops out of the complete annual lists. I use regular field offices in the 50 states and DC for 2000--2024 and exclude remote, resident, contact, and support sites. SSA does not count consolidations as closures [@gao2017a, p. 9], so some closure events here may be offices that SSA describes as consolidated.
+
+The tables document changes in office presence. They do not measure the distance applicants travel or the help they receive.
+
+### B.1 Annual Office Counts
+
+The annual table reports office stocks and closures for each year. Closure counts alone do not establish net change, because openings and other record changes also matter.
+
+```{r supporting-table-1, results='asis'}
+# place the annual table below the paragraph without a landscape page
+include_table(table_files[1], "supporting-table-1", portrait = TRUE)
+```
+
+### B.2 County Office Stock
+
+The county distribution shows that most counties had no regular office in 2010. This statistic does not mean their residents lacked access to an office in another county.
+
+```{r supporting-table-2, results='asis'}
+# include the original table float 
+include_table(table_files[2], "supporting-table-2")
+```
+
+### B.3 Loss of the Last Office
+
+The closure table separates losing one office from losing the last office in a county. These are event counts, not counts of unique counties. The shorter period is nested within the longer one.
+
+```{r supporting-table-3, results='asis'}
+# include the original table float 
+include_table(table_files[3], "supporting-table-3")
+```
+
+### B.4 Data Checks
+
+The check table explains why net change differs from closures. Open offices rose from 1,177 to 1,179 in 2017 with no closures. The table attributes that increase to one documented opening and one reclassification. Its relocation screen found no closure paired with a new office in the same county within one year.
+
+```{r supporting-table-4, results='asis'}
+# include the office-data check table 
+include_table(table_files[4], "supporting-table-4")
+```
+
+### B.5 Spending Query
+
+The spending figures in Section 3.2 come from the USAspending.gov application programming interface (API), queried on October 16, 2026. I pulled SSA program activities (agency code 028) for FY2024 and FY2025. The Disability Determination Services activity had \$2.33 billion in obligations in FY2024 and \$2.30 billion in FY2025 [@usaspending2026]. None of SSA's FY2024 grant awards went to a state DDS. The data show annual federal obligations for DDS work within the LAE account. They cannot show amounts by state, because DDS reimbursements are not reported as financial-assistance awards.
+
+### B.6 Text and Hearing Measures
+
+Figure \@ref(fig:agency-rules-profile) uses the text of 20 C.F.R. Part 404, Subpart Q, as in force on October 15, 2026 [@cfr2026]. The R code retrieves that dated version from the eCFR versioner API when the report is knit. The corpus covers all 48 sections. I keep each section's paragraphs and drop headings, history notes, and nested footnotes.
+
+Within each section, I join the paragraphs so that list items keep their lead-in sentence, and I remove enumeration markers. Abbreviations such as U.S.C. and C.F.R. and decimal section numbers are protected before splitting. The UDPipe English EWT model then splits sentences and tags verbs and grammatical subjects. A sentence is actionable if it contains shall, must, will, or may, or if it contains a listed verb. The corpus yields `r nrow(profile_units)` sentences, `r nrow(profile_action)` actionable sentences, and `r nrow(profile_pairs)` sentence--category pairs.
+
+The verb lists are Professor Clouser McCann's seven categories: enforcement, regulatory, funding, oversight, consultation, programmatic, and operations. I adapt them to regulation text. Each verb lemma is matched literally, so "insure" counts as funding and "meet" as consultation. A category counts once per sentence, and a sentence can carry several. Where one category per sentence is needed, the first match wins in the order listed above. Modal sentences with no listed verb fall into Other.
+
+Obligation also follows a fixed order. A negated modal (shall, must, will, or may followed by not) is prohibitive. Shall, must, or will is otherwise mandatory, and may alone is discretionary. "Will" counts as mandatory because these plain-language rules use it for duties. The acting subject is the subject of the main clause. "We," SSA, and the Commissioner are coded as SSA, and "State" or DDS as State/DDS. Verbs in subordinate clauses can belong to a different actor.
+
+An AI coding assistant checked 40 actionable sentences, drawn with a fixed seed (805), against these rules. It agreed with the automatic actor code for 38 sentences and with the first category for 38 (95 percent each). This is an internal check and not human inter-coder reliability. The two actor errors confused main and subordinate clauses. The two category errors were verbs that the tagger missed. No codes were changed by hand.
+
+Figure \@ref(fig:agency-hearing-profile) uses the House witness data of @ban2026. I keep appearances by SSA (code SZ) and the Social Security Advisory Board (SSAB). That leaves 560 appearances at 398 hearings from 1977 to 2014, and each hearing counts once in every panel. A hearing has a state or local witness if at least one state or local government official testified, which holds for 107 hearings. Committees are parent committees under their historical names. Title terms are lowercase alphabetic words longer than two letters, counted once per hearing. I remove standard stop words and procedural words such as "hearing," "part," and "session." I also remove the agency's name ("social," "security," "administration," "SSA") and the generic words "related," "agencies," and "program(s)."
+
+Both measures describe language and attendance. Category labels do not establish the legal function of a sentence. About half of the actionable sentences have no resolved SSA or state subject, which limits the actor comparisons. Hearing counts and title words say nothing about what witnesses said.
+
+\bigskip
+
+## Appendix C: AI Collaboration Statement
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{C\arabic{figure}}
+\setcounter{table}{0}
+\renewcommand{\thetable}{C\arabic{table}}
+
+I used AI tools for research support, coding, grammar checks, and rubric-based evaluation. I directed each task and checked the outputs against the underlying sources.
+
+### C.1 Tools and Purposes
+
+I orchestrated the following tasks in one multi-agent environment. I provided source files, my own writing, and directions for coding with my sample code. I verified the outputs against the sources and my draft. 
+
+- **Claude Opus 5.5:** 
+  - One session compiled a research pack. It retrieved and read primary documents I provided and computed state measures from my SSA data files. It marked each fact as verified, calculated, or unverified. 
+  - A second session revised the report prose from my draft. It double-checked whether I applied Professor Clouser McCann's feedback from Policy Lab 1 and checked citation keys. 
+  - A third session searched GAO reports on SSA disability administration and queried the USAspending.gov API. It checked each citation against its source and recomputed the Section 7.1 hearing counts from the replication data of @ban2026.
+  - Another session diagnosed gaps against the rubric and verified the Federal Register notice, the Advisory Board brief, and the ACUS report against their full texts after my own reading.
+  - A final session supervised the revision. It applied the audit corrections, checked the LaTeX and R Markdown output for knitting errors, and checked the final draft against the rubric criteria.
+- **Feynman research command-line tool:** Feynman ranked candidate papers from OpenAlex queries that I specified. 
+- **Codex GPT-5.6-Sol and GPT-6.1-Sol:** Codex extracted text from the public-law and legislative-history PDFs and summarized my lab notebooks from my GitHub repository.
+- **Codex GPT-6-Astra:** Codex wrote and tested the R code chunks based on my sample code for each figure and table. It built the extended diagram (Figure \@ref(fig:intergovernmental-diagram)) and the layouts of Tables \@ref(tab:state-comparison) and \@ref(tab:design-matrix). It built the all-state figure (Figure \@ref(fig:state-patterns)) from SSA's state workload file and my office data. It updated my text-analysis and hearing code for Figures \@ref(fig:agency-rules-profile) and \@ref(fig:agency-hearing-profile) and ran the 40-sentence check described in Appendix B.6. It also audited the code, citations, and factual claims in the draft and ran static checks on the R Markdown file.
+
+### C.2 Verification and Responsibility
+
+I verified statutory claims against the public-law texts of P.L. 96-265 and P.L. 98-460 and the current regulations. I verified court quotations against the U.S. Reports. The 1983--84 state actions come from the SSA Bulletin article by Collins and Erfle. State rates were recomputed from SSA's state agency workload file. The Figure \@ref(fig:state-patterns) correlations were recomputed from the source files in code. Office counts come from my own SSA Accessibility data. GAO figures were checked against the report PDFs. The USAspending.gov figures come from the query described in Appendix B. Code checks confirmed that the chunks run and the referenced files are aligned with my writing. I left out values I could not verify, including state-level DDS processing times and DDS spending by state.
+
+For more information, please check [my GitHub repository for this report](https://github.com/jodypark/ppol805_bureaucracy/tree/main/policy%20lab%202-intergovernmental-footprint).

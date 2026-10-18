@@ -1,0 +1,179 @@
+---
+title: |
+  \large \textbf{Lab Notebook - Week 8} 
+subtitle: |
+ Collaboration Across Governments: Federal Agencies \& SLTTGs \vspace{0.2cm}
+author: "Jody Park"
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+    latex_engine: xelatex
+colorlinks: true
+urlcolor: blue
+linkcolor: blue
+fontsize: 11pt
+bibliography: "references.bib"
+csl: "apanodoi.csl"
+link-citations: true
+reference-section-title: References
+header-includes:
+  - \usepackage[capposition=top]{floatrow}
+  - \usepackage{placeins}   
+  - \usepackage{dcolumn}
+  - \usepackage{booktabs}
+  - \usepackage{siunitx}
+  - \usepackage{amsmath}
+  - \usepackage{enumerate}
+  - \usepackage[shortlabels]{enumitem}
+  - \usepackage[hang,flushmargin]{footmisc}	
+  - \usepackage{makecell}
+  - \usepackage{url}
+  - \usepackage{longtable}
+  - \usepackage{graphicx}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{threeparttable}
+  - \usepackage{threeparttablex}
+  - \usepackage[normalem]{ulem}
+  - \usepackage{xcolor}
+  - \usepackage[most]{tcolorbox}
+  - \newtcolorbox{qbox}{enhanced,breakable,boxrule=0.5pt,arc=2mm,
+    colback=gray!10,colframe=black!50,left=6pt,right=6pt,top=6pt,bottom=6pt}
+  - \usepackage{fontspec}
+  - \usepackage[margin=1in]{geometry}
+  - \usepackage{titling}
+  - \setlength{\droptitle}{-1in}
+  - \usepackage{setspace}
+  - \setstretch{1.2} 
+---
+
+```{r setup, include = FALSE, message=FALSE, results=FALSE, echo = FALSE}
+# R libraries
+# data manipulation
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(haven)
+library(readr)
+library(caret)
+library(modelr)
+library(broom)
+library(ggplot2)
+library(plotly)
+library(png)
+library(openxlsx) 
+library(kableExtra)
+library(patchwork)
+library(texreg)
+library(estimatr)
+library(MASS) 
+library(Matrix)
+library(sandwich)   # vcovHC
+library(lmtest)     # coeftest
+library(boot)       # bootstrap
+library(conflicted)
+library(car)
+library(cowplot)
+library(AER)
+library(MatchIt)
+library(labelled)
+
+conflict_prefer("filter", "dplyr")
+conflict_prefer("select", "dplyr")
+
+# For figures
+knitr::opts_chunk$set(
+                      fig.width = 9, fig.height = 7, fig.retina = 3,
+                      out.width = "100%",
+                      cache = FALSE,
+                      echo = TRUE,
+                      message = FALSE, 
+                      warning = FALSE,
+                      hiline = TRUE
+                      )
+options(tinytex.verbose = TRUE)
+
+knitr::knit_hooks$set(plot = function (x, options) {
+  float_correct <- function(f, y, opts)  {
+    if (is.null(opts$regfloat) || opts$regfloat==FALSE)
+      paste0(f(y, opts), "\n\n\\FloatBarrier\n")
+    else
+      f(y, opts)
+  }
+  if (!is.null(options$out.width) || !is.null(options$out.height) ||
+      !is.null(options$out.extra) || options$fig.align != "default" ||
+      !is.null(options$fig.subcap)) {
+    if (is.null(options$fig.scap))
+      options$fig.scap = NA
+    return(float_correct(knitr:::hook_plot_tex, x, options))
+  }
+  return(float_correct(knitr:::hook_plot_md_base, x, options))
+})
+
+```
+
+# Goals for this week's lab notebook
+
+- Write down my thoughts on the readings
+
+- Continue working on my policy lab 2 report
+
+\bigskip
+
+# Week 8 Reading Notes \& Questions
+
+## Pam's plan for the class
+
+Let you get more time to work on your policy lab 2 projects.  
+
+Pam
+
+\bigskip
+
+## Reading notes
+
+## 1. Federal agency collaboration with state, local, tribal, and territorial governments [@mccannselin2025]
+
+- [EO 13175](https://2009-2017.state.gov/documents/organization/136740.pdf): Consultation and Coordination With Indian Tribal Governments 
+  - why was this mentioned often?
+  - information sharing
+  - workforce: opportunity dashboard 
+  - 60 executive branch officials; cabinet levels: well represented cabinet
+
+- What rules are they posting?
+
+- What incentives is the agency getting?
+
+\bigskip
+
+## 2. Government performance management: Leading practices to enhance interagency collaboration and address crosscutting challenges [@gao2015]
+
+- The leadership part was interesting; the GAO report was very informative and helpful to understand the interagency collaboration, when it comes to the federal agencies and SLTTGs.
+
+\bigskip
+
+### In-class Consultation 
+
+- SSA: US code scrape (text analysis)
+  - 130 sections of the US code
+  - 117 are intergovernmental
+
+- Verb categories
+  - Operations: rank 1
+
+- Where it sits: most of the time: public health and welfare 
+
+- Email Pam for the SSA US code scrape
+
+- She will be happy to have appendices in the report
+
+- I can record my presentation using Zoom and share it with Pam
+
+
+\newpage
